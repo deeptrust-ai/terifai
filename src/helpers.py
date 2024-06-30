@@ -1,19 +1,27 @@
-import urllib.parse
 import os
+import requests
 import time
 import urllib
-import requests
+import urllib.parse
+from dataclasses import dataclass
 
 from dotenv import load_dotenv
 
 load_dotenv()
 
 
-daily_api_path = os.getenv("DAILY_API_URL") or "api.daily.co/v1"
-daily_api_key = os.getenv("DAILY_API_KEY")
+DAILY_API_PATH = os.getenv("DAILY_API_URL") or "api.daily.co/v1"
+DAILY_API_KEY = os.getenv("DAILY_API_KEY")
 
 
-def daily_config():
+@dataclass
+class DailyConfig:
+    room_url: str
+    room_name: str
+    token: str
+
+
+def daily_config() -> DailyConfig:
     """
     Helper function to create a Daily room and get a token.
 
@@ -22,7 +30,7 @@ def daily_config():
     """
     room_url, room_name = create_room()
     token = get_token(room_url)
-    return dict(room_url=room_url, room_name=room_name, token=token)
+    return DailyConfig(room_url=room_url, room_name=room_name, token=token)
 
 
 def create_room() -> tuple[str, str]:
@@ -44,8 +52,8 @@ def create_room() -> tuple[str, str]:
         "enable_prejoin_ui": False,  # Important for the bot to be able to join headlessly
     }
     res = requests.post(
-        f"https://{daily_api_path}/rooms",
-        headers={"Authorization": f"Bearer {daily_api_key}"},
+        f"https://{DAILY_API_PATH}/rooms",
+        headers={"Authorization": f"Bearer {DAILY_API_KEY}"},
         json={"properties": room_props},
     )
     if res.status_code != 200:
@@ -93,7 +101,7 @@ def get_token(room_url: str) -> str:
             "No Daily room specified. You must specify a Daily room in order a token to be generated."
         )
 
-    if not daily_api_key:
+    if not DAILY_API_KEY:
         raise Exception(
             "No Daily API key specified. set DAILY_API_KEY in your environment to specify a Daily API key, available from https://dashboard.daily.co/developers."
         )
@@ -102,8 +110,8 @@ def get_token(room_url: str) -> str:
     room_name = get_name_from_url(room_url)
 
     res: requests.Response = requests.post(
-        f"https://{daily_api_path}/meeting-tokens",
-        headers={"Authorization": f"Bearer {daily_api_key}"},
+        f"https://{DAILY_API_PATH}/meeting-tokens",
+        headers={"Authorization": f"Bearer {DAILY_API_KEY}"},
         json={
             "properties": {
                 "room_name": room_name,

@@ -34,7 +34,8 @@ from pipecat.pipeline.pipeline import Pipeline
 from pipecat.pipeline.runner import PipelineRunner
 from pipecat.pipeline.task import PipelineParams, PipelineTask
 
-from prompts import LLM_BASE_PROMPT, LLM_INTRO_PROMPT, CUE_USER_TURN, CUE_ASSISTANT_TURN
+from prompts import LLM_BASE_PROMPT, LLM_INTRO_PROMPT
+from helpers import daily_config
 
 load_dotenv()
 
@@ -141,8 +142,15 @@ async def main(room_url, token=None):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="TerifAI Bot")
-    parser.add_argument("-u", type=str, help="Room URL")
-    parser.add_argument("-t", type=str, help="Token")
+    parser.add_argument("--room_url", type=str, help="Room URL")
+    parser.add_argument("--token", type=str, help="Token")
+    parser.add_argument("--default", type=bool, help="Default configurations")
     config = parser.parse_args()
 
-    asyncio.run(main(config.u, config.t))
+    if config.default:
+        config = daily_config()
+
+    if config.room_url is None:
+        raise ValueError("Room URL is required")
+
+    asyncio.run(main(config.room_url, config.token))
