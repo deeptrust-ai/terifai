@@ -25,6 +25,7 @@ from pipecat.processors.aggregators.llm_response import (
     LLMAssistantResponseAggregator,
     LLMUserResponseAggregator,
 )
+from processors import TranscriptionLogger
 
 ## Frames
 from pipecat.frames.frames import LLMMessagesFrame, EndFrame
@@ -83,6 +84,7 @@ async def main(room_url, token=None):
         # We need aggregators to keep track of user and LLM responses
         llm_responses = LLMAssistantResponseAggregator(message_history)
         user_responses = LLMUserResponseAggregator(message_history)
+        transcription_logger = TranscriptionLogger()
 
         # -------------- Pipeline ----------------- #
 
@@ -90,6 +92,8 @@ async def main(room_url, token=None):
             [
                 # Transport user input
                 transport.input(),
+                # Transcription logger
+                transcription_logger,
                 # User responses
                 user_responses,
                 # LLM
