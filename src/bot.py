@@ -56,10 +56,9 @@ async def main(room_url, token=None):
             "TerifAI",
             DailyParams(
                 audio_out_enabled=True,
-                transcription_enabled=False,
+                transcription_enabled=True,
                 vad_enabled=True,
                 vad_analyzer=SileroVADAnalyzer(params=VADParams(stop_secs=0.2)),
-                vad_audio_passthrough=True,
             ),
         )
 
@@ -120,7 +119,7 @@ async def main(room_url, token=None):
         async def on_first_participant_joined(transport, participant):
             # Kick off the conversation.
             time.sleep(1.5)
-            await task.queue_frame(LLMMessagesFrame(LLM_INTRO_PROMPT))
+            await task.queue_frame(LLMMessagesFrame([LLM_INTRO_PROMPT]))
 
         # When the participant leaves, we exit the bot.
         @transport.event_handler("on_participant_left")
@@ -144,7 +143,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="TerifAI Bot")
     parser.add_argument("--room_url", type=str, help="Room URL")
     parser.add_argument("--token", type=str, help="Token")
-    parser.add_argument("--default", type=bool, help="Default configurations")
+    parser.add_argument("--default", action="store_true", help="Default configurations")
     config = parser.parse_args()
 
     if config.default:
