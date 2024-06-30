@@ -5,7 +5,14 @@ description = "Add your description here"
 authors = [
     { name = "Aman Ibrahim", email = "amanmibra@gmail.com" }
 ]
-dependencies = []
+dependencies = [
+    "pipecat-ai[daily,openai,vad]>=0.0.35",
+    "async-timeout>=4.0.3",
+    "fastapi>=0.111.0",
+    "uvicorn>=0.30.1",
+    "requests>=2.32.3",
+    "python-dotenv>=1.0.1",
+]
 readme = "README.md"
 requires-python = ">= 3.8"
 
