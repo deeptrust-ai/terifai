@@ -122,6 +122,8 @@ async def main(room_url, token=None):
         @transport.event_handler("on_first_participant_joined")
         async def on_first_participant_joined(transport, participant):
             # Kick off the conversation.
+            logging.info(f"Participant joined: {participant['id']}")
+            transport.capture_participant_transcription(participant["id"])
             time.sleep(1.5)
             await task.queue_frame(LLMMessagesFrame([LLM_INTRO_PROMPT]))
 
