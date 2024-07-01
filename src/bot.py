@@ -36,7 +36,7 @@ from pipecat.pipeline.runner import PipelineRunner
 from pipecat.pipeline.task import PipelineParams, PipelineTask
 
 from prompts import LLM_BASE_PROMPT, LLM_INTRO_PROMPT
-from helpers import daily_config
+from helpers import get_daily_config
 
 load_dotenv()
 
@@ -153,7 +153,7 @@ if __name__ == "__main__":
     config = parser.parse_args()
 
     if config.default:
-        config = daily_config()
+        config = get_daily_config()
 
     if config.room_url is None:
         raise ValueError("Room URL is required")

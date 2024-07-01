@@ -21,7 +21,7 @@ class DailyConfig:
     token: str
 
 
-def daily_config() -> DailyConfig:
+def get_daily_config() -> DailyConfig:
     """
     Helper function to create a Daily room and get a token.
 
