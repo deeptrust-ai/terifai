@@ -14,7 +14,7 @@ interface RoomSetupProps {
 }
 
 const serverURL = import.meta.env.VITE_SERVER_URL;
-const manualRoomCreation = !!import.meta.env.VITE_MANUAL_ROOM_ENTRY;
+const manualRoomCreation = !!parseInt(import.meta.env.VITE_MANUAL_ROOM_ENTRY);
 
 export const RoomSetup: React.FC<RoomSetupProps> = ({
   serverUrl,

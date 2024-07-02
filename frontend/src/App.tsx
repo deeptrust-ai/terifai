@@ -14,7 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "./components/ui/card";
-import { fetch_start_agent } from "./actions";
+import { fetch_create_room, fetch_start_agent } from "./actions";
 
 type State =
   | "idle"
@@ -38,7 +38,9 @@ let serverUrl = import.meta.env.VITE_SERVER_URL;
 if (serverUrl && !serverUrl.endsWith("/")) serverUrl += "/";
 
 // Auto room creation (requires server URL)
-const autoRoomCreation = import.meta.env.VITE_MANUAL_ROOM_ENTRY ? false : true;
+const autoRoomCreation = parseInt(import.meta.env.VITE_MANUAL_ROOM_ENTRY)
+  ? false
+  : true;
 
 // Query string for room URL
 const roomQs = new URLSearchParams(window.location.search).get("room_url");
@@ -65,7 +67,9 @@ export default function App() {
   );
 
   function handleRoomUrl() {
+    console.log("here", autoRoomCreation, serverUrl, checkRoomUrl(roomUrl));
     if ((autoRoomCreation && serverUrl) || checkRoomUrl(roomUrl)) {
+      console.log("here");
       setRoomError(false);
       setState("configuring");
     } else {
@@ -84,7 +88,21 @@ export default function App() {
       setState("requesting_agent");
 
       try {
-        data = await fetch_start_agent(roomUrl, serverUrl);
+        // Fetch the default daily configuration
+        const config = await fetch_create_room(serverUrl);
+
+        if (config.error) {
+          setError(config.detail);
+          setState("error");
+          return;
+        }
+
+        // Start the agent with the room URL and token
+        data = await fetch_start_agent(
+          config.room_url,
+          config.token,
+          serverUrl
+        );
 
         if (data.error) {
           setError(data.detail);
