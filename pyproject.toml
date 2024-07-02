@@ -30,3 +30,9 @@ allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/terifai"]
+
+[tool.poetry]
+name = "terifai"
+version = "0.1.0"
+description = "Add your description here"
+authors = ["Aman Ibrahim <amanmibra@gmail.com>"]
