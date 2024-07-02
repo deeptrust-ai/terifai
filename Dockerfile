@@ -23,5 +23,8 @@ COPY ./src /app/src
 # Expose the port the app runs on
 EXPOSE 7860
 
+# Set the PYTHONPATH environment variable
+ENV PYTHONPATH="src"
+
 # Command to run the application
 CMD python -m src.server
