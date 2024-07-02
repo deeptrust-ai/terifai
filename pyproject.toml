@@ -23,7 +23,7 @@ build-backend = "hatchling.build"
 
 [tool.rye]
 managed = true
-dev-dependencies = []
+virtual = true
 
 [tool.hatch.metadata]
 allow-direct-references = true
@@ -31,8 +31,6 @@ allow-direct-references = true
 [tool.hatch.build.targets.wheel]
 packages = ["src/terifai"]
 
-[tool.poetry]
-name = "terifai"
-version = "0.1.0"
-description = "Add your description here"
-authors = ["Aman Ibrahim <amanmibra@gmail.com>"]
+[tool.rye.scripts]
+build_docker = "./scripts/build_docker.sh"
+image = "./scripts/run_docker.sh"
