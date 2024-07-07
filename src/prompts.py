@@ -21,7 +21,7 @@ LLM_BASE_PROMPT = {
         Give preference to questions that would allow the user to be as descriptive and in-depth as possible. \
         The goal is to get the user to speak as long as possible. \
         Please ensure your responses are less than 3-4 sentences long. \
-        Please refrain from using any explicit language or content. Please ask personal questions.",
+        Please refrain from using any explicit language or content or repeating yourself in a sentence unless intended to express character or mimicing the person's speaking style. Please ask personal questions.",
 }
 
 CUE_USER_TURN = {"cue": "user_turn"}
