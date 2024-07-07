@@ -4,7 +4,7 @@ import os
 import wave
 from dataclasses import dataclass
 
-from modal import Function
+from modal import Function, functions
 from pipecat.frames.frames import (
     Frame,
     AudioRawFrame,
@@ -25,7 +25,7 @@ load_dotenv()
 
 DEEPGRAM_API_KEY = os.environ.get("DEEPGRAM_API_KEY")
 DEFAULT_VOICE_ID = os.environ.get("ELEVENLABS_VOICE_ID")
-DEFAULT_BUFFER_SECS = 15
+DEFAULT_BUFFER_SECS = 10
 logger.info(f"Default voice ID: {DEFAULT_VOICE_ID}")
 
 
@@ -46,6 +46,13 @@ class AudioFrameTerrify(DataFrame):
 
     def __str__(self):
         return f"{self.name}(size: {len(self.audio)}, frames: {self.num_frames}, sample_rate: {self.sample_rate}, channels: {self.num_channels})"
+
+
+@dataclass
+class JobPollingFrame(Frame):
+    """A frame to poll the status of a job."""
+
+    job_id: str
 
 
 class TranscriptionLogger(FrameProcessor):
@@ -114,10 +121,12 @@ class ElevenLabsTerrify(ElevenLabsTTSService):
         self._max_silence_secs = 0.3
         self._silence_num_frames = 0
         self._min_volume = 0.6
+        self._job_completed = False
 
         (self._content, self._wave) = self._new_wave()
 
     def set_voice_id(self, voice_id: str):
+        logger.debug(f"Setting voice ID: {voice_id}")
         self._voice_id = voice_id
 
     def get_voice_id(self):
@@ -148,7 +157,7 @@ class ElevenLabsTerrify(ElevenLabsTTSService):
 
         # Check if the audio length is >= 30 seconds
         buffer_secs = self._wave.getnframes() / self._sample_rate
-        if buffer_secs >= DEFAULT_BUFFER_SECS:
+        if buffer_secs >= DEFAULT_BUFFER_SECS and not self._job_completed:
             self._wave.close()
             self._content.seek(0)
             await self._launch_clone_job(self._content.read())
@@ -162,11 +171,23 @@ class ElevenLabsTerrify(ElevenLabsTTSService):
         job = add_elevenlabs_voice.spawn(audio_data)
         job_id = job.object_id
         logger.debug(f"Voice cloning job launch: {job_id}")
-        # logger.debug(
-        #     "Launching clone job with audio data of length: {}".format(len(audio_data))
-        # )
-        # with open("test.wav", "wb") as f:
-        #     f.write(audio_data)
+
+        await self.push_frame(JobPollingFrame(job_id=job_id), FrameDirection.DOWNSTREAM)
+
+    def _poll_job(self, job_id: str):
+        """Polls the status of a job"""
+        logger.debug(f"Polling job: {job_id}")
+        function_call = functions.FunctionCall.from_id(job_id)
+        try:
+            result = function_call.get(timeout=0)
+        except TimeoutError:
+            return None, False
+        except Exception as e:
+            logger.error(f"Error polling job: {e}")
+            return None, True
+
+        self._job_completed = True
+        return result, False
 
     async def process_frame(self, frame: Frame, direction: FrameDirection):
         """Processes a frame of audio data"""
@@ -174,7 +195,16 @@ class ElevenLabsTerrify(ElevenLabsTTSService):
 
         if isinstance(frame, CancelFrame) or isinstance(frame, EndFrame):
             self._wave.close()
+            await self.push_frame(frame, direction)
         elif isinstance(frame, AudioFrameTerrify):
             await self._write_audio_frames(frame)
-
-        await self.push_frame(frame, direction)
+            await self.push_frame(frame, direction)
+        elif isinstance(frame, JobPollingFrame):
+            logger.debug(f"Polling job: {frame.job_id}")
+            result, error = self._poll_job(frame.job_id)
+            if error:
+                logger.error(f"Error polling job: {result}")
+            elif result:
+                self.set_voice_id(result)
+            else:
+                await self.push_frame(frame, direction)
