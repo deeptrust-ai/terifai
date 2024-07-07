@@ -25,7 +25,7 @@ load_dotenv()
 
 DEEPGRAM_API_KEY = os.environ.get("DEEPGRAM_API_KEY")
 DEFAULT_VOICE_ID = os.environ.get("ELEVENLABS_VOICE_ID")
-DEFAULT_BUFFER_SECS = 30
+DEFAULT_BUFFER_SECS = 20
 logger.info(f"Default voice ID: {DEFAULT_VOICE_ID}")
 
 
@@ -86,7 +86,6 @@ class DeepgramTerrify(DeepgramSTTService):
                 sample_rate=frame.sample_rate,
                 num_channels=frame.num_channels,
             )
-            logger.debug(f"HERE Audio capture frame: {audio_capture_frame}")
             await self.push_frame(audio_capture_frame, direction)
 
         await super().process_frame(frame, direction)
@@ -164,12 +163,6 @@ class ElevenLabsTerrify(ElevenLabsTTSService):
         with open("test.wav", "wb") as f:
             f.write(audio_data)
 
-    async def _write_audio_frames(self, frame: AudioFrameTerrify):
-        """Collects audio frames and checks if the audio length is >= 30 seconds"""
-        volume = self._get_smoothed_volume(frame)
-        self._wave.writeframes(frame.audio)
-        self._prev_volume = volume
-
     async def process_frame(self, frame: Frame, direction: FrameDirection):
         """Processes a frame of audio data"""
         await super().process_frame(frame, direction)
@@ -177,7 +170,6 @@ class ElevenLabsTerrify(ElevenLabsTTSService):
         if isinstance(frame, CancelFrame) or isinstance(frame, EndFrame):
             self._wave.close()
         elif isinstance(frame, AudioFrameTerrify):
-            logger.debug(f"HERE Processing audio frame: {frame}")
             await self._write_audio_frames(frame)
 
         await self.push_frame(frame, direction)
