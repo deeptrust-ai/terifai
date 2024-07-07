@@ -14,7 +14,7 @@ from pipecat.frames.frames import (
 )
 from pipecat.processors.frame_processor import FrameDirection, FrameProcessor
 
-# from pipecat.services.deepgram import DeepgramSTTService
+from pipecat.services.deepgram import DeepgramSTTService
 from pipecat.services.elevenlabs import ElevenLabsTTSService
 from pipecat.utils.audio import calculate_audio_volume, exp_smoothing
 
@@ -75,21 +75,21 @@ class TerrifyAudioCapture(FrameProcessor):
         await self.push_frame(frame, direction)
 
 
-# class DeepgramTerrigy(DeepgramSTTService):
-#     def __init__(self):
-#         super().__init__(api_key=DEEPGRAM_API_KEY)
+class DeepgramTerrify(DeepgramSTTService):
+    def __init__(self):
+        super().__init__(api_key=DEEPGRAM_API_KEY)
 
-#     async def process_frame(self, frame: Frame, direction: FrameDirection):
-#         if isinstance(frame, AudioRawFrame):
-#             audio_capture_frame = AudioFrameTerrify(
-#                 audio=frame.audio,
-#                 sample_rate=frame.sample_rate,
-#                 num_frames=frame.num_frames,
-#             )
-#             logger.debug(f"HERE Audio capture frame: {audio_capture_frame}")
-#             await self.push_frame(audio_capture_frame, direction)
+    async def process_frame(self, frame: Frame, direction: FrameDirection):
+        if isinstance(frame, AudioRawFrame):
+            audio_capture_frame = AudioFrameTerrify(
+                audio=frame.audio,
+                sample_rate=frame.sample_rate,
+                num_channels=frame.num_channels,
+            )
+            logger.debug(f"HERE Audio capture frame: {audio_capture_frame}")
+            await self.push_frame(audio_capture_frame, direction)
 
-#         return super().process_frame(frame, direction)
+        await super().process_frame(frame, direction)
 
 
 class ElevenLabsTerrify(ElevenLabsTTSService):

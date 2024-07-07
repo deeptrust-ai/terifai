@@ -25,7 +25,13 @@ from pipecat.processors.aggregators.llm_response import (
     LLMAssistantResponseAggregator,
     LLMUserResponseAggregator,
 )
-from processors import TranscriptionLogger, TerrifyAudioCapture, ElevenLabsTerrify
+from processors import (
+    TranscriptionLogger,
+    TerrifyAudioCapture,
+    ElevenLabsTerrify,
+    DeepgramTerrify,
+    DeepgramSTTService,
+)
 
 ## Frames
 from pipecat.frames.frames import LLMMessagesFrame, EndFrame
@@ -56,17 +62,20 @@ async def main(room_url, token=None):
             token,
             "TerifAI",
             DailyParams(
-                audio_in_enabled=True,
+                # audio_in_enabled=True,
                 audio_out_enabled=True,
-                transcription_enabled=True,
+                # transcription_enabled=True,
                 vad_enabled=True,
                 vad_analyzer=SileroVADAnalyzer(params=VADParams(stop_secs=0.2)),
+                vad_audio_passthrough=True,
             ),
         )
 
         logging.info("Transport created for room:" + room_url)
 
         # -------------- Services --------------- #
+
+        stt_service = DeepgramTerrify()
 
         llm_service = OpenAILLMService(
             api_key=os.getenv("OPENAI_API_KEY"), model="gpt-4o"
@@ -93,8 +102,10 @@ async def main(room_url, token=None):
             [
                 # Transport user input
                 transport.input(),
+                # STT
+                stt_service,
                 # Transcription logger
-                TerrifyAudioCapture(),
+                # TerrifyAudioCapture(),
                 transcription_logger,
                 # User responses
                 user_responses,
