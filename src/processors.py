@@ -4,6 +4,7 @@ import os
 import wave
 from dataclasses import dataclass
 
+from modal import Function
 from pipecat.frames.frames import (
     Frame,
     AudioRawFrame,
@@ -13,7 +14,6 @@ from pipecat.frames.frames import (
     TranscriptionFrame,
 )
 from pipecat.processors.frame_processor import FrameDirection, FrameProcessor
-
 from pipecat.services.deepgram import DeepgramSTTService
 from pipecat.services.elevenlabs import ElevenLabsTTSService
 from pipecat.utils.audio import calculate_audio_volume, exp_smoothing
@@ -25,7 +25,7 @@ load_dotenv()
 
 DEEPGRAM_API_KEY = os.environ.get("DEEPGRAM_API_KEY")
 DEFAULT_VOICE_ID = os.environ.get("ELEVENLABS_VOICE_ID")
-DEFAULT_BUFFER_SECS = 20
+DEFAULT_BUFFER_SECS = 15
 logger.info(f"Default voice ID: {DEFAULT_VOICE_ID}")
 
 
@@ -156,12 +156,17 @@ class ElevenLabsTerrify(ElevenLabsTTSService):
 
     async def _launch_clone_job(self, audio_data: bytes):
         """Launches a clone job with the given audio data"""
-        # Placeholder for the actual implementation of the clone job
-        logger.debug(
-            "Launching clone job with audio data of length: {}".format(len(audio_data))
+        add_elevenlabs_voice = Function.lookup(
+            "terifai-functions", "add_elevenlabs_voice"
         )
-        with open("test.wav", "wb") as f:
-            f.write(audio_data)
+        job = add_elevenlabs_voice.spawn(audio_data)
+        job_id = job.object_id
+        logger.debug(f"Voice cloning job launch: {job_id}")
+        # logger.debug(
+        #     "Launching clone job with audio data of length: {}".format(len(audio_data))
+        # )
+        # with open("test.wav", "wb") as f:
+        #     f.write(audio_data)
 
     async def process_frame(self, frame: Frame, direction: FrameDirection):
         """Processes a frame of audio data"""
