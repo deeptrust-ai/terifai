@@ -6,7 +6,7 @@ authors = [
     { name = "Aman Ibrahim", email = "amanmibra@gmail.com" }
 ]
 dependencies = [
-    "pipecat-ai[daily,openai,vad,silero]>=0.0.35",
+    "pipecat-ai[daily,deepgram,openai,vad,silero]>=0.0.35",
     "async-timeout>=4.0.3",
     "fastapi>=0.111.0",
     "uvicorn>=0.30.1",
