@@ -35,3 +35,5 @@ packages = ["src/terifai"]
 [tool.rye.scripts]
 build_docker = "./scripts/build_docker.sh"
 image = "./scripts/run_docker.sh"
+bot = "python -m src.bot --default"
+server = "python -m src.server --reload"
