@@ -27,10 +27,8 @@ from pipecat.processors.aggregators.llm_response import (
 )
 from processors import (
     TranscriptionLogger,
-    TerrifyAudioCapture,
     ElevenLabsTerrify,
     DeepgramTerrify,
-    DeepgramSTTService,
 )
 
 ## Frames
@@ -105,7 +103,6 @@ async def main(room_url, token=None):
                 # STT
                 stt_service,
                 # Transcription logger
-                # TerrifyAudioCapture(),
                 transcription_logger,
                 # User responses
                 user_responses,

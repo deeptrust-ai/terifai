@@ -33,10 +33,7 @@ logger.info(f"Default voice ID: {DEFAULT_VOICE_ID}")
 
 @dataclass
 class AudioFrameTerrify(DataFrame):
-    """A chunk of audio. Will be played by the transport if the transport's
-    microphone has been enabled.
-
-    """
+    """Seperate dataclass for audio frames to be processed by the TerifAI custom Deepgram and ElevenLabs services."""
 
     audio: bytes
     sample_rate: int
@@ -61,27 +58,12 @@ class TranscriptionLogger(FrameProcessor):
         await self.push_frame(frame)
 
 
-class TerrifyAudioCapture(FrameProcessor):
-    async def process_frame(self, frame: Frame, direction: FrameDirection):
-        await super().process_frame(frame, direction)
-        if isinstance(frame, AudioRawFrame):
-            audio_capture_frame = AudioFrameTerrify(
-                audio=frame.audio,
-                sample_rate=frame.sample_rate,
-                num_frames=frame.num_frames,
-            )
-            logger.debug(f"HERE Audio capture frame: {audio_capture_frame}")
-            await self.push_frame(audio_capture_frame, direction)
-
-        logger.debug(f"HERE Pushing frame: {frame}")
-        await self.push_frame(frame, direction)
-
-
 class DeepgramTerrify(DeepgramSTTService):
     def __init__(self):
         super().__init__(api_key=DEEPGRAM_API_KEY)
 
     async def process_frame(self, frame: Frame, direction: FrameDirection):
+        """Processes a frame of audio data via AudioFrameTerrify because STT does not push AudioRawFrames downstream after transcription."""
         if isinstance(frame, AudioRawFrame):
             audio_capture_frame = AudioFrameTerrify(
                 audio=frame.audio,
@@ -146,7 +128,7 @@ class ElevenLabsTerrify(ElevenLabsTTSService):
         return exp_smoothing(volume, self._prev_volume, self._smoothing_factor)
 
     async def _write_audio_frames(self, frame: AudioFrameTerrify):
-        """Collects audio frames"""
+        """Collects audio frames, and launches and polls audio frame jobs"""
         volume = self._get_smoothed_volume(frame)
         if volume >= self._min_volume:
             # If volume is high enough, write new data to wave file
