@@ -27,7 +27,7 @@ load_dotenv()
 DEEPGRAM_API_KEY = os.environ.get("DEEPGRAM_API_KEY")
 DEFAULT_VOICE_ID = os.environ.get("ELEVENLABS_VOICE_ID")
 MIN_SECS_TO_LAUNCH = 30
-DEFAULT_POLL_GAP_SECS = 5
+DEFAULT_POLL_INTERVAL_SECS = 5
 logger.info(f"Default voice ID: {DEFAULT_VOICE_ID}")
 
 
@@ -116,7 +116,7 @@ class ElevenLabsTerrify(ElevenLabsTTSService):
         self._prev_volume = 0.0
         self._smoothing_factor = 0.2
         self._max_silence_secs = 0.3
-        self._silence_num_frames = 0
+        self._silence_frame_count = 0
         self._min_volume = 0.6
         (self._content, self._wave) = self._new_wave()
 
@@ -124,7 +124,7 @@ class ElevenLabsTerrify(ElevenLabsTTSService):
         self._job_id = None
         self._job_completed = False
         self._last_poll_time = time.time()
-        self._poll_interval = DEFAULT_POLL_GAP_SECS
+        self._poll_interval = DEFAULT_POLL_INTERVAL_SECS
 
     def set_voice_id(self, voice_id: str):
         logger.debug(f"Setting voice ID: {voice_id}")
@@ -151,9 +151,9 @@ class ElevenLabsTerrify(ElevenLabsTTSService):
         if volume >= self._min_volume:
             # If volume is high enough, write new data to wave file
             self._wave.writeframes(frame.audio)
-            self._silence_num_frames = 0
+            self._silence_frame_count = 0
         else:
-            self._silence_num_frames += frame.num_frames
+            self._silence_frame_count += frame.num_frames
         self._prev_volume = volume
 
         # Check if the audio length is >= 30 seconds
