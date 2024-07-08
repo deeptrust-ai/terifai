@@ -1,7 +1,7 @@
 [project]
 name = "terifai"
-version = "0.1.0"
-description = "Add your description here"
+version = "0.1.1"
+description = "Conversation AI that clones your voice."
 authors = [
     { name = "Aman Ibrahim", email = "amanmibra@gmail.com" }
 ]
@@ -24,7 +24,6 @@ build-backend = "hatchling.build"
 
 [tool.rye]
 managed = true
-virtual = true
 
 [tool.hatch.metadata]
 allow-direct-references = true
