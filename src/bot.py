@@ -25,7 +25,11 @@ from pipecat.processors.aggregators.llm_response import (
     LLMAssistantResponseAggregator,
     LLMUserResponseAggregator,
 )
-from processors import TranscriptionLogger
+from processors import (
+    TranscriptionLogger,
+    ElevenLabsTerrify,
+    DeepgramTerrify,
+)
 
 ## Frames
 from pipecat.frames.frames import LLMMessagesFrame, EndFrame
@@ -56,10 +60,12 @@ async def main(room_url, token=None):
             token,
             "TerifAI",
             DailyParams(
+                # audio_in_enabled=True,
                 audio_out_enabled=True,
-                transcription_enabled=True,
+                # transcription_enabled=True,
                 vad_enabled=True,
                 vad_analyzer=SileroVADAnalyzer(params=VADParams(stop_secs=0.2)),
+                vad_audio_passthrough=True,
             ),
         )
 
@@ -67,14 +73,16 @@ async def main(room_url, token=None):
 
         # -------------- Services --------------- #
 
+        stt_service = DeepgramTerrify()
+
         llm_service = OpenAILLMService(
             api_key=os.getenv("OPENAI_API_KEY"), model="gpt-4o"
         )
 
-        tts_service = ElevenLabsTTSService(
+        tts_service = ElevenLabsTerrify(
             aiohttp_session=session,
             api_key=os.getenv("ELEVENLABS_API_KEY"),
-            voice_id=os.getenv("ELEVENLABS_VOICE_ID"),
+            # voice_id=os.getenv("ELEVENLABS_VOICE_ID"),
         )
 
         # --------------- Setup ----------------- #
@@ -92,6 +100,8 @@ async def main(room_url, token=None):
             [
                 # Transport user input
                 transport.input(),
+                # STT
+                stt_service,
                 # Transcription logger
                 transcription_logger,
                 # User responses
@@ -124,7 +134,7 @@ async def main(room_url, token=None):
             # Kick off the conversation.
             logging.info(f"Participant joined: {participant['id']}")
             transport.capture_participant_transcription(participant["id"])
-            time.sleep(1.5)
+            time.sleep(1)
             await task.queue_frame(LLMMessagesFrame([LLM_INTRO_PROMPT]))
 
         # When the participant leaves, we exit the bot.
