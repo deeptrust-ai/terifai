@@ -2,6 +2,7 @@ import aiohttp
 import io
 import os
 import time
+import requests
 import wave
 from dataclasses import dataclass
 
@@ -92,6 +93,8 @@ class ElevenLabsTerrify(ElevenLabsTTSService):
             **kwargs,
         )
 
+        self._api_key = api_key
+
         # voice data collection attributes
         self._num_channels = 1
         self._sample_rate = 16000
@@ -179,12 +182,22 @@ class ElevenLabsTerrify(ElevenLabsTTSService):
         self.set_voice_id(result)
         return result
 
+    def _delete_clone(self):
+        """Deletes voice clone"""
+        if not self._job_completed and not self._voice_id:
+            return
+
+        url = f"https://api.elevenlabs.io/v1/voices/{self._voice_id}"
+        headers = {"xi-api-key": self._api_key}
+        requests.request("DELETE", url, headers=headers)
+
     async def process_frame(self, frame: Frame, direction: FrameDirection):
         """Processes a frame of audio data"""
         await super().process_frame(frame, direction)
 
         if isinstance(frame, CancelFrame) or isinstance(frame, EndFrame):
             self._wave.close()
+            self._delete_clone()
             await self.push_frame(frame, direction)
         elif isinstance(frame, AudioFrameTerrify):
             await self._write_audio_frames(frame)
