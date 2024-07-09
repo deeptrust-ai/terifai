@@ -140,6 +140,7 @@ async def main(room_url, token=None):
         # When the participant leaves, we exit the bot.
         @transport.event_handler("on_participant_left")
         async def on_participant_left(transport, participant, reason):
+            logging.info(f"Participant left: {participant['id']}")
             await task.queue_frame(EndFrame())
 
         # If the call is ended make sure we quit as well.

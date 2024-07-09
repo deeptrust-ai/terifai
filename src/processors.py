@@ -176,10 +176,10 @@ class ElevenLabsTerrify(ElevenLabsTTSService):
     def _poll_job(self):
         """Polls the status of a job"""
         logger.debug(f"Polling job: {self._job_id}")
+        self._last_poll_time = time.time()
         try:
             function_call = functions.FunctionCall.from_id(self._job_id)
             result = function_call.get(timeout=0)
-            self._last_poll_time = time.time()
         except TimeoutError:
             return None
         except Exception as e:
