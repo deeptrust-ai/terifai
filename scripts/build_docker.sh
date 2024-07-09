@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Build the wheel
-rye build --wheel
-
 # Find the latest wheel file
 latest_wheel=$(ls -t dist/*.whl | head -1)
 

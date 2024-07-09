@@ -1,0 +1,22 @@
+# fly.toml app configuration file generated for terifai on 2024-07-08T11:17:20-07:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'terifai'
+primary_region = 'sjc'
+
+[build]
+
+[http_service]
+  internal_port = 7860
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1

@@ -1,0 +1,304 @@
+# flyctl launch added from .gitignore
+# python generated files
+**/__pycache__
+**/*.py[oc]
+**/build
+**/dist
+**/wheels
+**/*.egg-info
+
+# venv
+**/.venv
+**/.env
+**/.vercel
+
+# flyctl launch added from .venv/.gitignore
+.venv/**/*
+
+# flyctl launch added from examples/storytelling-chatbot/.gitignore
+examples/storytelling-chatbot/**/node_modules
+examples/storytelling-chatbot/**/.idea
+
+# Byte-compiled / optimized / DLL files
+examples/storytelling-chatbot/**/__pycache__
+examples/storytelling-chatbot/**/*.py[cod]
+examples/storytelling-chatbot/**/*$py.class
+examples/storytelling-chatbot/**/.DS_Store
+
+# C extensions
+examples/storytelling-chatbot/**/*.so
+
+# Distribution / packaging
+examples/storytelling-chatbot/**/.Python
+examples/storytelling-chatbot/**/build
+examples/storytelling-chatbot/**/develop-eggs
+examples/storytelling-chatbot/**/dist
+examples/storytelling-chatbot/**/downloads
+examples/storytelling-chatbot/**/eggs
+examples/storytelling-chatbot/**/.eggs
+examples/storytelling-chatbot/**/lib
+examples/storytelling-chatbot/**/lib64
+examples/storytelling-chatbot/**/parts
+examples/storytelling-chatbot/**/sdist
+examples/storytelling-chatbot/**/var
+examples/storytelling-chatbot/**/wheels
+examples/storytelling-chatbot/**/share/python-wheels
+examples/storytelling-chatbot/**/*.egg-info
+examples/storytelling-chatbot/**/.installed.cfg
+examples/storytelling-chatbot/**/*.egg
+examples/storytelling-chatbot/**/MANIFEST
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+examples/storytelling-chatbot/**/*.manifest
+examples/storytelling-chatbot/**/*.spec
+
+# Installer logs
+examples/storytelling-chatbot/**/pip-log.txt
+examples/storytelling-chatbot/**/pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+examples/storytelling-chatbot/**/htmlcov
+examples/storytelling-chatbot/**/.tox
+examples/storytelling-chatbot/**/.nox
+examples/storytelling-chatbot/**/.coverage
+examples/storytelling-chatbot/**/.coverage.*
+examples/storytelling-chatbot/**/.cache
+examples/storytelling-chatbot/**/nosetests.xml
+examples/storytelling-chatbot/**/coverage.xml
+examples/storytelling-chatbot/**/*.cover
+examples/storytelling-chatbot/**/*.py,cover
+examples/storytelling-chatbot/**/.hypothesis
+examples/storytelling-chatbot/**/.pytest_cache
+examples/storytelling-chatbot/**/cover
+
+# Translations
+examples/storytelling-chatbot/**/*.mo
+examples/storytelling-chatbot/**/*.pot
+
+# Django stuff:
+examples/storytelling-chatbot/**/*.log
+examples/storytelling-chatbot/**/local_settings.py
+examples/storytelling-chatbot/**/db.sqlite3
+examples/storytelling-chatbot/**/db.sqlite3-journal
+
+# Flask stuff:
+examples/storytelling-chatbot/**/instance
+examples/storytelling-chatbot/**/.webassets-cache
+
+# Scrapy stuff:
+examples/storytelling-chatbot/**/.scrapy
+
+# Sphinx documentation
+examples/storytelling-chatbot/**/docs/_build
+
+# PyBuilder
+examples/storytelling-chatbot/**/.pybuilder
+examples/storytelling-chatbot/**/target
+
+# Jupyter Notebook
+examples/storytelling-chatbot/**/.ipynb_checkpoints
+
+# IPython
+examples/storytelling-chatbot/**/profile_default
+examples/storytelling-chatbot/**/ipython_config.py
+
+# pyenv
+#   For a library or package, you might want to ignore these files since the code is
+#   intended to run in multiple environments; otherwise, check them in:
+# .python-version
+
+# pipenv
+#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
+#   However, in case of collaboration, if having platform-specific dependencies or dependencies
+#   having no cross-platform support, pipenv may install dependencies that don't work, or not
+#   install all needed dependencies.
+#Pipfile.lock
+
+# poetry
+#   Similar to Pipfile.lock, it is generally recommended to include poetry.lock in version control.
+#   This is especially recommended for binary packages to ensure reproducibility, and is more
+#   commonly ignored for libraries.
+#   https://python-poetry.org/docs/basic-usage/#commit-your-poetrylock-file-to-version-control
+#poetry.lock
+
+# PEP 582; used by e.g. github.com/David-OConnor/pyflow
+examples/storytelling-chatbot/**/__pypackages__
+
+# Celery stuff
+examples/storytelling-chatbot/**/celerybeat-schedule
+examples/storytelling-chatbot/**/celerybeat.pid
+
+# SageMath parsed files
+examples/storytelling-chatbot/**/*.sage.py
+
+# Environments
+examples/storytelling-chatbot/**/.env
+examples/storytelling-chatbot/**/.venv
+examples/storytelling-chatbot/**/env
+examples/storytelling-chatbot/**/venv
+examples/storytelling-chatbot/**/ENV
+examples/storytelling-chatbot/**/env.bak
+examples/storytelling-chatbot/**/venv.bak
+
+# Spyder project settings
+examples/storytelling-chatbot/**/.spyderproject
+examples/storytelling-chatbot/**/.spyproject
+
+# Rope project settings
+examples/storytelling-chatbot/**/.ropeproject
+
+# mkdocs documentation
+examples/storytelling-chatbot/site
+
+# mypy
+examples/storytelling-chatbot/**/.mypy_cache
+examples/storytelling-chatbot/**/.dmypy.json
+examples/storytelling-chatbot/**/dmypy.json
+
+# Pyre type checker
+examples/storytelling-chatbot/**/.pyre
+
+# pytype static type analyzer
+examples/storytelling-chatbot/**/.pytype
+
+# Cython debug symbols
+examples/storytelling-chatbot/**/cython_debug
+
+# PyCharm
+#  JetBrains specific template is maintainted in a separate JetBrains.gitignore that can
+#  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
+#  and can be added to the global gitignore or merged into this file.  For a more nuclear
+#  option (not recommended) you can uncomment the following to ignore the entire idea folder.
+#.idea/
+
+examples/storytelling-chatbot/**/read.html
+
+# flyctl launch added from examples/storytelling-chatbot/frontend/.gitignore
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+examples/storytelling-chatbot/frontend/node_modules
+examples/storytelling-chatbot/frontend/.pnp
+examples/storytelling-chatbot/frontend/**/.pnp.js
+examples/storytelling-chatbot/frontend/**/.yarn/install-state.gz
+
+# testing
+examples/storytelling-chatbot/frontend/coverage
+
+# next.js
+examples/storytelling-chatbot/frontend/.next
+examples/storytelling-chatbot/frontend/out
+
+# production
+examples/storytelling-chatbot/frontend/build
+
+# misc
+examples/storytelling-chatbot/frontend/**/.DS_Store
+examples/storytelling-chatbot/frontend/**/*.pem
+
+# debug
+examples/storytelling-chatbot/frontend/**/npm-debug.log*
+examples/storytelling-chatbot/frontend/**/yarn-debug.log*
+examples/storytelling-chatbot/frontend/**/yarn-error.log*
+
+# local env files
+examples/storytelling-chatbot/frontend/**/.env*.local
+
+# vercel
+examples/storytelling-chatbot/frontend/**/.vercel
+
+# typescript
+examples/storytelling-chatbot/frontend/**/*.tsbuildinfo
+examples/storytelling-chatbot/frontend/**/next-env.d.ts
+
+# flyctl launch added from examples/storytelling-chatbot/frontend/node_modules/tailwindcss/stubs/.gitignore
+!examples/storytelling-chatbot/frontend/node_modules/tailwindcss/stubs/**/*
+
+# flyctl launch added from frontend/.gitignore
+# Logs
+frontend/**/logs
+frontend/**/*.log
+frontend/**/npm-debug.log*
+frontend/**/yarn-debug.log*
+frontend/**/yarn-error.log*
+frontend/**/pnpm-debug.log*
+frontend/**/lerna-debug.log*
+
+frontend/**/node_modules
+frontend/**/dist
+frontend/**/dist-ssr
+frontend/**/*.local
+
+# Editor directories and files
+frontend/**/.vscode/*
+!frontend/**/.vscode/extensions.json
+frontend/**/.idea
+frontend/**/.DS_Store
+frontend/**/*.suo
+frontend/**/*.ntvs*
+frontend/**/*.njsproj
+frontend/**/*.sln
+frontend/**/*.sw?
+frontend/test-results
+frontend/playwright-report
+frontend/blob-report
+frontend/playwright/.cache
+
+# flyctl launch added from frontend/node_modules/minipass-sized/.gitignore
+# ignore most things, include some others
+frontend/node_modules/minipass-sized/*
+frontend/node_modules/minipass-sized/.*
+
+!frontend/node_modules/minipass-sized/**/bin
+!frontend/node_modules/minipass-sized/**/lib
+!frontend/node_modules/minipass-sized/**/docs
+!frontend/node_modules/minipass-sized/**/package.json
+!frontend/node_modules/minipass-sized/**/package-lock.json
+!frontend/node_modules/minipass-sized/**/README.md
+!frontend/node_modules/minipass-sized/**/CONTRIBUTING.md
+!frontend/node_modules/minipass-sized/**/LICENSE
+!frontend/node_modules/minipass-sized/**/CHANGELOG.md
+!frontend/node_modules/minipass-sized/**/example
+!frontend/node_modules/minipass-sized/**/scripts
+!frontend/node_modules/minipass-sized/**/tap-snapshots
+!frontend/node_modules/minipass-sized/**/test
+!frontend/node_modules/minipass-sized/**/.travis.yml
+!frontend/node_modules/minipass-sized/**/.gitignore
+!frontend/node_modules/minipass-sized/**/.gitattributes
+!frontend/node_modules/minipass-sized/**/coverage-map.js
+!frontend/node_modules/minipass-sized/**/index.js
+
+# flyctl launch added from frontend/node_modules/promise-all-reject-late/.gitignore
+# ignore most things, include some others
+frontend/node_modules/promise-all-reject-late/*
+frontend/node_modules/promise-all-reject-late/.*
+
+!frontend/node_modules/promise-all-reject-late/**/bin
+!frontend/node_modules/promise-all-reject-late/**/lib
+!frontend/node_modules/promise-all-reject-late/**/docs
+!frontend/node_modules/promise-all-reject-late/**/package.json
+!frontend/node_modules/promise-all-reject-late/**/package-lock.json
+!frontend/node_modules/promise-all-reject-late/**/README.md
+!frontend/node_modules/promise-all-reject-late/**/CONTRIBUTING.md
+!frontend/node_modules/promise-all-reject-late/**/LICENSE
+!frontend/node_modules/promise-all-reject-late/**/CHANGELOG.md
+!frontend/node_modules/promise-all-reject-late/**/example
+!frontend/node_modules/promise-all-reject-late/**/scripts
+!frontend/node_modules/promise-all-reject-late/**/tap-snapshots
+!frontend/node_modules/promise-all-reject-late/**/test
+!frontend/node_modules/promise-all-reject-late/**/.github
+!frontend/node_modules/promise-all-reject-late/**/.travis.yml
+!frontend/node_modules/promise-all-reject-late/**/.gitignore
+!frontend/node_modules/promise-all-reject-late/**/.gitattributes
+!frontend/node_modules/promise-all-reject-late/**/coverage-map.js
+!frontend/node_modules/promise-all-reject-late/**/map.js
+!frontend/node_modules/promise-all-reject-late/**/index.js
+
+# flyctl launch added from frontend/node_modules/tailwindcss/stubs/.gitignore
+!frontend/node_modules/tailwindcss/stubs/**/*
+fly.toml
+
+# Allow wheel files
+!dist/*.whl

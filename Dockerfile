@@ -20,6 +20,9 @@ RUN pip install --no-cache-dir --upgrade /app/$wheel
 # Copy the source code into the image
 COPY ./src /app/src
 
+# Install models
+RUN python ./src/install_deps.py
+
 # Expose the port the app runs on
 EXPOSE 7860
 

@@ -29,7 +29,7 @@ managed = true
 allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/terifai"]
+packages = ["src"]
 
 [tool.rye.scripts]
 build_docker = "./scripts/build_docker.sh"
