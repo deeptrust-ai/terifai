@@ -36,10 +36,12 @@ def add_elevenlabs_voice(audio: bytes):
 
     response = requests.post(url, files=files, data=data, headers=headers)
 
-    response.raise_for_status()  # Raises an HTTPError for bad responses
-
-    voice_id = response.json()["voice_id"]
-
-    print(f"Voice cloning successful: {voice_id}")
-
-    return voice_id
+    try:
+        response.raise_for_status()  # Raises an HTTPError for bad responses
+        voice_id = response.json()["voice_id"]
+        print(f"Voice cloning successful: {voice_id}")
+        return voice_id
+    except requests.exceptions.HTTPError as e:
+        print(f"Error in voice cloning: {e}")
+        print(f"Response content: {response.text}")
+        raise
