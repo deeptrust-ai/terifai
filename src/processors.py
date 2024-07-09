@@ -135,7 +135,13 @@ class ElevenLabsTerrify(ElevenLabsTTSService):
         volume = self._get_smoothed_volume(frame)
         if volume >= self._min_volume:
             # If volume is high enough, write new data to wave file
-            self._wave.writeframes(frame.audio)
+            if self._wave is not None:
+                try:
+                    self._wave.writeframes(frame.audio)
+                except Exception as e:
+                    logger.error(f"Error writing audio frame: {e}")
+            else:
+                logger.error("Wave object is None, cannot write frames")
             self._silence_frame_count = 0
         else:
             self._silence_frame_count += frame.num_frames
@@ -157,20 +163,23 @@ class ElevenLabsTerrify(ElevenLabsTTSService):
 
     async def _launch_clone_job(self, audio_data: bytes):
         """Launches a clone job with the given audio data"""
-        add_elevenlabs_voice = Function.lookup(
-            "terifai-functions", "add_elevenlabs_voice"
-        )
-        job = add_elevenlabs_voice.spawn(audio_data)
-        self._job_id = job.object_id
-        logger.debug(f"Voice cloning job launch: {self._job_id}")
+        try:
+            add_elevenlabs_voice = Function.lookup(
+                "terifai-functions", "add_elevenlabs_voice"
+            )
+            job = add_elevenlabs_voice.spawn(audio_data)
+            self._job_id = job.object_id
+            logger.debug(f"Voice cloning job launch: {self._job_id}")
+        except Exception as e:
+            logger.error(f"Error launching voice cloning job: {e}")
 
     def _poll_job(self):
         """Polls the status of a job"""
-        self._last_poll_time = time.time()
         logger.debug(f"Polling job: {self._job_id}")
-        function_call = functions.FunctionCall.from_id(self._job_id)
         try:
+            function_call = functions.FunctionCall.from_id(self._job_id)
             result = function_call.get(timeout=0)
+            self._last_poll_time = time.time()
         except TimeoutError:
             return None
         except Exception as e:
@@ -187,9 +196,13 @@ class ElevenLabsTerrify(ElevenLabsTTSService):
         if not self._job_completed and not self._voice_id:
             return
 
-        url = f"https://api.elevenlabs.io/v1/voices/{self._voice_id}"
-        headers = {"xi-api-key": self._api_key}
-        requests.request("DELETE", url, headers=headers)
+        try:
+            url = f"https://api.elevenlabs.io/v1/voices/{self._voice_id}"
+            headers = {"xi-api-key": self._api_key}
+            response = requests.request("DELETE", url, headers=headers)
+            response.raise_for_status()
+        except Exception as e:
+            logger.error(f"Error deleting voice clone: {e}")
 
     async def process_frame(self, frame: Frame, direction: FrameDirection):
         """Processes a frame of audio data"""
