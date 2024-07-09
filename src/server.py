@@ -1,9 +1,7 @@
 import os
 import argparse
-import subprocess
 import atexit
 from dataclasses import asdict
-from pathlib import Path
 from typing import Optional
 
 from fastapi import FastAPI, Request, HTTPException
@@ -12,21 +10,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from helpers import DailyConfig, get_daily_config, get_name_from_url, get_token
+from spawn import spawn_fly_machine, get_machine_status
 
 MAX_BOTS_PER_ROOM = 1
 
-# Bot sub-process dict for status reporting and concurrency control
-bot_procs = {}
-
-
-def cleanup():
-    # Clean up function, just to be extra safe
-    for proc in bot_procs.values():
-        proc.terminate()
-        proc.wait()
-
-
-atexit.register(cleanup)
+# Bot machine dict for status reporting and concurrency control
+bot_machines = {}
 
 app = FastAPI()
 
@@ -78,39 +67,28 @@ async def start_agent(item: StartAgentItem) -> JSONResponse:
     room_url = item.room_url
     token = item.token
 
-    # Spawn a new agent, and join the user session
+    # Spawn a new agent machine, and join the user session
     try:
-        proc = subprocess.Popen(
-            [f"python3 -m bot --room_url={room_url} --token={token}"],
-            shell=True,
-            bufsize=1,
-            cwd=os.path.dirname(os.path.abspath(__file__)),
-        )
-        bot_procs[proc.pid] = (proc, room_url)
+        vm_id = spawn_fly_machine(room_url, token)
+        bot_machines[vm_id] = room_url
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to start subprocess: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to start machine: {e}")
 
-    return JSONResponse({"bot_id": proc.pid, "room_url": room_url})
+    return JSONResponse({"bot_id": vm_id, "room_url": room_url})
 
 
-@app.get("/status/{pid}")
-def get_status(pid: int):
-    # Look up the subprocess
-    proc = bot_procs.get(pid)
-
-    # If the subprocess doesn't exist, return an error
-    if not proc:
+@app.get("/status/{vm_id}")
+def get_status(vm_id: str):
+    # Look up the machine
+    if vm_id not in bot_machines:
         raise HTTPException(
-            status_code=404, detail=f"Bot with process id: {pid} not found"
+            status_code=404, detail=f"Bot with machine id: {vm_id} not found"
         )
 
-    # Check the status of the subprocess
-    if proc[0].poll() is None:
-        status = "running"
-    else:
-        status = "finished"
+    # Check the status of the machine
+    status = get_machine_status(vm_id)
 
-    return JSONResponse({"bot_id": pid, "status": status})
+    return JSONResponse({"bot_id": vm_id, "status": status})
 
 
 if __name__ == "__main__":
@@ -120,6 +98,8 @@ if __name__ == "__main__":
         "DAILY_API_KEY",
         "ELEVENLABS_VOICE_ID",
         "ELEVENLABS_API_KEY",
+        "FLY_API_KEY",
+        "FLY_APP_NAME",
     ]
     for env_var in required_env_vars:
         if env_var not in os.environ:

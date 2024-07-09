@@ -1,6 +1,6 @@
 [project]
 name = "terifai"
-version = "0.1.1"
+version = "0.1.2"
 description = "Conversation AI that clones your voice."
 authors = [
     { name = "Aman Ibrahim", email = "amanmibra@gmail.com" }
