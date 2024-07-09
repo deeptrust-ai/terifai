@@ -2,7 +2,7 @@
 FROM python:3.12.2-slim
 
 # Accept the build argument
-ARG wheel
+ARG WHEEL
 
 # Update the package list and pip
 RUN apt-get update && \
@@ -14,8 +14,8 @@ RUN python -m pip install --upgrade pip
 WORKDIR /app
 
 # Copy the wheel file and install it
-COPY ./dist/$wheel /app/$wheel
-RUN pip install --no-cache-dir --upgrade /app/$wheel
+COPY ./dist/$WHEEL /app/$WHEEL
+RUN pip install --no-cache-dir --upgrade /app/$WHEEL
 
 # Copy the source code into the image
 COPY ./src /app/src
