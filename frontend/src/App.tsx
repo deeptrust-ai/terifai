@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDaily } from "@daily-co/daily-react";
 import { ArrowRight, Ear, Loader2 } from "lucide-react";
 
+import MaintenancePage from "./components/MaintenancePage";
 import Session from "./components/Session";
 import { Configure, RoomSetup } from "./components/Setup";
 import { Alert } from "./components/ui/alert";
@@ -15,6 +16,8 @@ import {
   CardTitle,
 } from "./components/ui/card";
 import { fetch_create_room, fetch_start_agent } from "./actions";
+
+const isMaintenanceMode = import.meta.env.VITE_MAINTENANCE_MODE === "true";
 
 type State =
   | "idle"
@@ -139,6 +142,10 @@ export default function App() {
     await daily?.leave();
     await daily?.destroy();
     setState(showConfigOptions ? "idle" : "configuring");
+  }
+
+  if (isMaintenanceMode) {
+    return <MaintenancePage />;
   }
 
   if (state === "error") {
