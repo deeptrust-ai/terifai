@@ -76,7 +76,7 @@ async def main(room_url, token=None):
         stt_service = DeepgramTerrify()
 
         llm_service = OpenAILLMService(
-            api_key=os.getenv("OPENAI_API_KEY"), model="gpt-4o"
+            api_key=os.getenv("OPENAI_API_KEY"), model="gpt-4o-mini"
         )
 
         tts_service = ElevenLabsTerrify(

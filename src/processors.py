@@ -27,7 +27,7 @@ load_dotenv()
 
 DEEPGRAM_API_KEY = os.environ.get("DEEPGRAM_API_KEY")
 DEFAULT_VOICE_ID = os.environ.get("ELEVENLABS_VOICE_ID")
-MIN_SECS_TO_LAUNCH = 30
+MIN_SECS_TO_LAUNCH = int(os.environ.get("MIN_SECS_TO_LAUNCH", 30))
 DEFAULT_POLL_INTERVAL_SECS = 5
 logger.info(f"Default voice ID: {DEFAULT_VOICE_ID}")
 

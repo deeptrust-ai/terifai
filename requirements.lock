@@ -124,7 +124,7 @@ numpy==1.26.4
     # via pipecat-ai
     # via pyloudnorm
     # via scipy
-openai==1.26.0
+openai==1.27.0
     # via pipecat-ai
 orjson==3.10.5
     # via fastapi
@@ -132,7 +132,7 @@ packaging==24.1
     # via marshmallow
 pillow==10.3.0
     # via pipecat-ai
-pipecat-ai==0.0.35
+pipecat-ai==0.0.39
     # via terifai
 protobuf==4.25.3
     # via modal
