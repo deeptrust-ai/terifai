@@ -1,5 +1,7 @@
 # terifai
 
+[link](https://terif.ai)
+
 a conversation voice bot that "steals your voice". through conversation with you, it will:
 
 - learn about you and who you are
