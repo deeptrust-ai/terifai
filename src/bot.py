@@ -81,13 +81,15 @@ async def main(room_url, token=None, xtts=False):
         )
 
         if xtts:
+            logging.info("Using XTTS")
             tts_service = XTTSService(
                 aiohttp_session=session,
-                voice_id="Claribel Dervla",
+                voice_id="Suad Qasim",
                 language="en",
-                base_url="http://localhost:8000",
+                base_url="https://deeptrust-ai-dev--xtts-xtts-web.modal.run",
             )
         else:
+            logging.info("Using ElevenLabs")
             tts_service = ElevenLabsTerrify(
                 aiohttp_session=session,
                 api_key=os.getenv("ELEVENLABS_API_KEY"),
@@ -170,12 +172,12 @@ if __name__ == "__main__":
     parser.add_argument("--token", type=str, help="Token")
     parser.add_argument("--default", action="store_true", help="Default configurations")
     parser.add_argument("--xtts", action="store_true", help="Use XTTS")
-    config = parser.parse_args()
+    args = parser.parse_args()
 
-    if config.default:
+    if args.default:
         config = get_daily_config()
 
     if config.room_url is None:
         raise ValueError("Room URL is required")
 
-    asyncio.run(main(config.room_url, config.token, config.xtts))
+    asyncio.run(main(config.room_url, config.token, args.xtts))
