@@ -84,7 +84,7 @@ async def main(room_url, token=None, xtts=False):
             logging.info("Using XTTS")
             tts_service = XTTSService(
                 aiohttp_session=session,
-                voice_id="Suad Qasim",
+                voice_id="Claribel Dervla",
                 language="en",
                 base_url="https://deeptrust-ai-dev--xtts-xtts-web.modal.run",
             )
