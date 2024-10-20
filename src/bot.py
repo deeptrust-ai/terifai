@@ -30,6 +30,7 @@ from processors import (
     TranscriptionLogger,
     ElevenLabsTerrify,
     DeepgramTerrify,
+    XTTSTerrify,
 )
 
 ## Frames
@@ -82,7 +83,7 @@ async def main(room_url, token=None, xtts=False):
 
         if xtts:
             logging.info("Using XTTS")
-            tts_service = XTTSService(
+            tts_service = XTTSTerrify(
                 aiohttp_session=session,
                 voice_id="Claribel Dervla",
                 language="en",
