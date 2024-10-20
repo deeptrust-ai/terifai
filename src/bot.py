@@ -18,6 +18,7 @@ from pipecat.vad.silero import SileroVADAnalyzer
 
 ## Services
 from pipecat.services.openai import OpenAILLMService
+from pipecat.services.xtts import XTTSService
 from pipecat.services.elevenlabs import ElevenLabsTTSService
 
 ## Processors
@@ -50,7 +51,7 @@ else:
     logging.basicConfig(level=logging.INFO)
 
 
-async def main(room_url, token=None):
+async def main(room_url, token=None, xtts=False):
     async with aiohttp.ClientSession() as session:
 
         # -------------- Transport --------------- #
@@ -79,12 +80,19 @@ async def main(room_url, token=None):
             api_key=os.getenv("OPENAI_API_KEY"), model="gpt-4o-mini"
         )
 
-        tts_service = ElevenLabsTerrify(
-            aiohttp_session=session,
-            api_key=os.getenv("ELEVENLABS_API_KEY"),
-            # voice_id=os.getenv("ELEVENLABS_VOICE_ID"),
-        )
-
+        if xtts:
+            tts_service = XTTSService(
+                aiohttp_session=session,
+                voice_id="Claribel Dervla",
+                language="en",
+                base_url="http://localhost:8000",
+            )
+        else:
+            tts_service = ElevenLabsTerrify(
+                aiohttp_session=session,
+                api_key=os.getenv("ELEVENLABS_API_KEY"),
+            )
+    
         # --------------- Setup ----------------- #
 
         message_history = [LLM_BASE_PROMPT]
@@ -161,6 +169,7 @@ if __name__ == "__main__":
     parser.add_argument("--room_url", type=str, help="Room URL")
     parser.add_argument("--token", type=str, help="Token")
     parser.add_argument("--default", action="store_true", help="Default configurations")
+    parser.add_argument("--xtts", action="store_true", help="Use XTTS")
     config = parser.parse_args()
 
     if config.default:
@@ -169,4 +178,4 @@ if __name__ == "__main__":
     if config.room_url is None:
         raise ValueError("Room URL is required")
 
-    asyncio.run(main(config.room_url, config.token))
+    asyncio.run(main(config.room_url, config.token, config.xtts))
