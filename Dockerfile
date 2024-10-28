@@ -10,11 +10,14 @@ RUN apt-get update && \
   rm -rf /var/lib/apt/lists/*
 RUN python -m pip install --upgrade pip
 
+# Install torch and torchaudio
+RUN pip install torch torchaudio
+
 # Set the working directory
 WORKDIR /app
 
-# Install torch and torchaudio
-RUN pip install torch torchaudio
+# Copy the source code into the image
+COPY ./src /app/src
 
 # Install models
 RUN python ./src/install_deps.py
@@ -22,9 +25,6 @@ RUN python ./src/install_deps.py
 # Copy the wheel file and install it
 COPY ./dist/$WHEEL /app/$WHEEL
 RUN pip install --no-cache-dir --upgrade /app/$WHEEL
-
-# Copy the source code into the image
-COPY ./src /app/src
 
 # Expose the port the app runs on
 EXPOSE 7860
