@@ -11,7 +11,7 @@ RUN apt-get update && \
 RUN python -m pip install --upgrade pip
 
 # Install torch and torchaudio
-RUN pip install torch torchaudio
+RUN pip install --no-cache-dir torch torchaudio
 
 # Set the working directory
 WORKDIR /app
