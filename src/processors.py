@@ -20,7 +20,7 @@ from pipecat.services.cartesia import CartesiaTTSService
 from pipecat.services.deepgram import DeepgramSTTService
 from pipecat.services.elevenlabs import ElevenLabsTTSService
 from pipecat.services.xtts import XTTSService
-from pipecat.utils.audio import calculate_audio_volume, exp_smoothing
+from pipecat.audio.utils import calculate_audio_volume, exp_smoothing
 
 from dotenv import load_dotenv
 from loguru import logger
