@@ -98,6 +98,7 @@ if __name__ == "__main__":
         "ELEVENLABS_API_KEY",
         "FLY_API_KEY",
         "FLY_APP_NAME",
+        "CARTESIA_API_KEY",
     ]
     for env_var in required_env_vars:
         if env_var not in os.environ:

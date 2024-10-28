@@ -25,6 +25,7 @@ from pipecat.processors.aggregators.llm_response import (
 )
 from processors import (
     TranscriptionLogger,
+    CartesiaTerrify,
     ElevenLabsTerrify,
     DeepgramTerrify,
     XTTSTerrify,
@@ -49,7 +50,7 @@ else:
     logging.basicConfig(level=logging.INFO)
 
 
-async def main(room_url, token=None, xtts=False):
+async def main(room_url, token=None, xtts=False, elevenlabs=False):
     async with aiohttp.ClientSession() as session:
 
         # -------------- Transport --------------- #
@@ -86,13 +87,16 @@ async def main(room_url, token=None, xtts=False):
                 language="en",
                 base_url="https://deeptrust-ai-dev--xtts-xtts-web.modal.run",
             )
-        else:
+        elif elevenlabs:
             logging.info("Using ElevenLabs")
             tts_service = ElevenLabsTerrify(
                 aiohttp_session=session,
                 api_key=os.getenv("ELEVENLABS_API_KEY"),
             )
-    
+        else:
+            logging.info("Using Cartesia")
+            tts_service = CartesiaTerrify()
+
         # --------------- Setup ----------------- #
 
         message_history = [LLM_BASE_PROMPT]
@@ -170,6 +174,7 @@ if __name__ == "__main__":
     parser.add_argument("--token", type=str, help="Token")
     parser.add_argument("--default", action="store_true", help="Default configurations")
     parser.add_argument("--xtts", action="store_true", help="Use XTTS")
+    parser.add_argument("--elevenlabs", action="store_true", help="Use ElevenLabs")
     args = parser.parse_args()
 
     if args.default:
@@ -178,4 +183,4 @@ if __name__ == "__main__":
     if config.room_url is None:
         raise ValueError("Room URL is required")
 
-    asyncio.run(main(config.room_url, config.token, args.xtts))
+    asyncio.run(main(config.room_url, config.token, args.xtts, args.elevenlabs))
