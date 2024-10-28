@@ -175,7 +175,7 @@ if __name__ == "__main__":
     parser.add_argument("--default", action="store_true", help="Default configurations")
     parser.add_argument("--xtts", action="store_true", help="Use XTTS")
     parser.add_argument("--elevenlabs", action="store_true", help="Use ElevenLabs")
-    config = parser.parse_config()
+    config = parser.parse_args()
 
     if config.default:
         config = get_daily_config()
