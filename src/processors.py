@@ -27,7 +27,7 @@ from loguru import logger
 
 load_dotenv()
 
-AMAN_CARTESIA_VOICE_ID = "7ea421fb-7e17-466f-bcbd-d410c7da66b5"
+DEFAULT_CARTESIA_VOICE_ID = "e00d0e4c-a5c8-443f-a8a3-473eb9a62355"
 
 # api keys
 CARTESIA_API_KEY = os.environ.get("CARTESIA_API_KEY")
@@ -353,7 +353,7 @@ class CartesiaTerrify(CartesiaTTSService):
     def __init__(
         self,
         api_key: str = CARTESIA_API_KEY,
-        voice_id: str = AMAN_CARTESIA_VOICE_ID,
+        voice_id: str = DEFAULT_CARTESIA_VOICE_ID,
         *args,
         **kwargs,
     ):
@@ -466,7 +466,10 @@ class CartesiaTerrify(CartesiaTTSService):
 
     def _delete_clone(self):
         """Deletes voice clone"""
-        if not self._job_completed and not self._voice_id:
+        if not self._job_completed:
+            return
+
+        if self._voice_id == DEFAULT_CARTESIA_VOICE_ID:
             return
 
         try:
