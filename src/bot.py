@@ -3,7 +3,6 @@ import asyncio
 import aiohttp
 import logging
 import os
-import sys
 import time
 
 from dotenv import load_dotenv
@@ -18,8 +17,6 @@ from pipecat.vad.silero import SileroVADAnalyzer
 
 ## Services
 from pipecat.services.openai import OpenAILLMService
-from pipecat.services.xtts import XTTSService
-from pipecat.services.elevenlabs import ElevenLabsTTSService
 
 ## Processors
 from pipecat.processors.aggregators.llm_response import (

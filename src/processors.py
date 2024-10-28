@@ -217,6 +217,7 @@ class ElevenLabsTerrify(ElevenLabsTTSService):
             await self._write_audio_frames(frame)
             await self.push_frame(frame, direction)
 
+
 class XTTSTerrify(XTTSService):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -266,7 +267,7 @@ class XTTSTerrify(XTTSService):
         ww.setnchannels(self._num_channels)
         ww.setframerate(self._sample_rate)
         return (content, ww)
-    
+
     async def _write_audio_frames(self, frame: AudioFrameTerrify):
         """Collects audio frames, and launches and polls audio frame jobs"""
         volume = self._get_smoothed_volume(frame)
@@ -301,14 +302,11 @@ class XTTSTerrify(XTTSService):
     def _get_smoothed_volume(self, frame: AudioFrameTerrify) -> float:
         volume = calculate_audio_volume(frame.audio, frame.sample_rate)
         return exp_smoothing(volume, self._prev_volume, self._smoothing_factor)
-    
 
     async def _launch_clone_job(self, audio_data: bytes):
         """Launches a clone job with the given audio data"""
         try:
-            RemoteXTTS = Cls.lookup(
-                "xtts", "XTTS"
-            )
+            RemoteXTTS = Cls.lookup("xtts", "XTTS")
             rxtts = RemoteXTTS()
             job = rxtts.clone_speaker.spawn(audio_data)
             self._job_id = job.object_id
