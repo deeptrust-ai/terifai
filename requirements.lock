@@ -229,6 +229,7 @@ watchfiles==0.22.0
     # via uvicorn
 websockets==12.0
     # via deepgram-sdk
+    # via pipecat-ai
     # via uvicorn
 yarl==1.9.4
     # via aiohttp
