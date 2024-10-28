@@ -1,6 +1,6 @@
 [project]
 name = "terifai"
-version = "0.1.4"
+version = "0.1.5"
 description = "Conversation AI that clones your voice."
 authors = [
     { name = "Aman Ibrahim", email = "amanmibra@gmail.com" }
@@ -14,8 +14,6 @@ dependencies = [
     "python-dotenv>=1.0.1",
     "aiohttp>=3.9.5",
     "modal>=0.63.41",
-    "torch>=2.5.0",
-    "torchaudio>=2.5.0",
 ]
 readme = "README.md"
 requires-python = ">= 3.8"
