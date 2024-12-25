@@ -7,3 +7,9 @@ a conversation voice bot that "steals your voice". through conversation with you
 - and clone your voice
 
 the purpose of this project is to educate, especially people who are the most exposed to voice phishing attacks.
+
+## Development
+
+### Linting
+- Backend: Run `rye lint` from the root directory
+- Frontend: Run `bun lint` from the `frontend` directory
