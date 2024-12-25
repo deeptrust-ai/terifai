@@ -1,5 +1,6 @@
 import React from "react";
 import { TwitterIcon } from "lucide-react";
+
 import DeepTrustLogo from "../../assets/logos/deeptrust.png";
 
 const MaintenancePage: React.FC = () => {
