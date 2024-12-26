@@ -57,11 +57,13 @@ export default function App() {
   );
 
   function handleRoomUrl() {
-    if (serverUrl || checkRoomUrl(roomUrl)) {
+    if (serverUrl || (roomUrl && checkRoomUrl(roomUrl))) {
       setRoomError(false);
+      // Keep in configuring state to show device configuration
       setState("configuring");
     } else {
       setRoomError(true);
+      setState("idle");
     }
   }
 
@@ -201,7 +203,7 @@ export default function App() {
           id="nextBtn"
           fullWidthMobile
           key="next"
-          disabled={!!((roomQs && !roomError) || !serverUrl)}
+          disabled={!serverUrl && (!roomQs || roomError)}
           onClick={() => handleRoomUrl()}
         >
           Next <ArrowRight />
