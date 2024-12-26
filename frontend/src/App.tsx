@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useDaily } from "@daily-co/daily-react";
 import { ArrowRight, Ear, Loader2 } from "lucide-react";
 
-import MaintenancePage from "./components/MaintenancePage";
 import Session from "./components/Session";
 import { Configure, RoomSetup } from "./components/Setup";
 import { Alert } from "./components/ui/alert";
@@ -16,8 +15,6 @@ import {
   CardTitle,
 } from "./components/ui/card";
 import { fetch_create_room, fetch_start_agent } from "./actions";
-
-const isMaintenanceMode = import.meta.env.VITE_MAINTENANCE_MODE === "true";
 
 type State =
   | "idle"
@@ -40,18 +37,10 @@ const status_text = {
 let serverUrl = import.meta.env.VITE_SERVER_URL;
 if (serverUrl && !serverUrl.endsWith("/")) serverUrl += "/";
 
-// Auto room creation (requires server URL)
-const autoRoomCreation = parseInt(import.meta.env.VITE_MANUAL_ROOM_ENTRY)
-  ? false
-  : true;
-
 // Query string for room URL
 const roomQs = new URLSearchParams(window.location.search).get("room_url");
 const checkRoomUrl = (url: string | null): boolean =>
   !!(url && /^(https?:\/\/[^.]+(\.staging)?\.daily\.co\/[^/]+)$/.test(url));
-
-// Show config options
-const showConfigOptions = import.meta.env.VITE_SHOW_CONFIG;
 
 // Mic mode
 const isOpenMic = import.meta.env.VITE_OPEN_MIC ? true : false;
@@ -59,9 +48,7 @@ const isOpenMic = import.meta.env.VITE_OPEN_MIC ? true : false;
 export default function App() {
   const daily = useDaily();
 
-  const [state, setState] = useState<State>(
-    showConfigOptions ? "idle" : "configuring"
-  );
+  const [state, setState] = useState<State>("configuring");
   const [error, setError] = useState<string | null>(null);
   const [startAudioOff, setStartAudioOff] = useState<boolean>(false);
   const [roomUrl, setRoomUrl] = useState<string | null>(roomQs || null);
@@ -70,9 +57,7 @@ export default function App() {
   );
 
   function handleRoomUrl() {
-    console.log("here", autoRoomCreation, serverUrl, checkRoomUrl(roomUrl));
-    if ((autoRoomCreation && serverUrl) || checkRoomUrl(roomUrl)) {
-      console.log("here");
+    if (serverUrl || checkRoomUrl(roomUrl)) {
       setRoomError(false);
       setState("configuring");
     } else {
@@ -81,7 +66,7 @@ export default function App() {
   }
 
   async function start() {
-    if (!daily || (!roomUrl && !autoRoomCreation)) return;
+    if (!daily || !roomUrl) return;
 
     let data;
 
@@ -141,11 +126,7 @@ export default function App() {
   async function leave() {
     await daily?.leave();
     await daily?.destroy();
-    setState(showConfigOptions ? "idle" : "configuring");
-  }
-
-  if (isMaintenanceMode) {
-    return <MaintenancePage />;
+    setState("configuring");
   }
 
   if (state === "error") {
@@ -203,7 +184,7 @@ export default function App() {
   return (
     <Card shadow className="animate-appear max-w-lg">
       <CardHeader>
-        <CardTitle>Pipecat {import.meta.env.VITE_APP_TITLE}</CardTitle>
+        <CardTitle>{import.meta.env.VITE_APP_TITLE}</CardTitle>
         <CardDescription>Check configuration below</CardDescription>
       </CardHeader>
       <CardContent stack>
@@ -220,9 +201,7 @@ export default function App() {
           id="nextBtn"
           fullWidthMobile
           key="next"
-          disabled={
-            !!((roomQs && !roomError) || (autoRoomCreation && !serverUrl))
-          }
+          disabled={!!((roomQs && !roomError) || !serverUrl)}
           onClick={() => handleRoomUrl()}
         >
           Next <ArrowRight />
