@@ -6,7 +6,7 @@ WORKDIR /app
 
 RUN uv pip install --no-cache --system -r requirements.lock
 
-RUN uv pip install --no-cache --system torch
+RUN uv pip install --no-cache --system torch torchaudio
 
 # Install models
 RUN python ./backend/install_deps.py
