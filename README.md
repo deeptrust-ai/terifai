@@ -13,7 +13,6 @@ The purpose of this project is to educate, especially people who are the most ex
 ### Prerequisites
 - [Rye](https://rye-up.com/guide/installation/) for Python dependency management
 - [Bun](https://bun.sh/) for frontend development
-- Git
 
 ### Initial Setup
 
