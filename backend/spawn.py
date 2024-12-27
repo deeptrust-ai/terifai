@@ -1,6 +1,7 @@
 import os
-import requests
 import time
+
+import requests
 
 FLY_API_HOST = os.getenv("FLY_API_HOST", "https://api.machines.dev/v1")
 FLY_APP_NAME = os.getenv("FLY_APP_NAME")
