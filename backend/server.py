@@ -7,8 +7,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-from src.helpers import DailyConfig, get_daily_config, get_name_from_url, get_token
-from src.spawn import get_machine_status, spawn_fly_machine
+from backend.helpers import DailyConfig, get_daily_config, get_name_from_url, get_token
+from backend.spawn import get_machine_status, spawn_fly_machine
 
 MAX_BOTS_PER_ROOM = 1
 
@@ -117,5 +117,5 @@ if __name__ == "__main__":
     config = parser.parse_args()
 
     uvicorn.run(
-        "src.server:app", host=config.host, port=config.port, reload=config.reload
+        "backend.server:app", host=config.host, port=config.port, reload=config.reload
     )

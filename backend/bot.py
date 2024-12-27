@@ -32,15 +32,15 @@ from pipecat.vad.silero import SileroVADAnalyzer
 ## VAD
 from pipecat.vad.vad_analyzer import VADParams
 
-from src.helpers import get_daily_config
-from src.processors import (
+from backend.helpers import get_daily_config
+from backend.processors import (
     CartesiaTerrify,
     DeepgramTerrify,
     ElevenLabsTerrify,
     TranscriptionLogger,
     XTTSTerrify,
 )
-from src.prompts import LLM_BASE_PROMPT, LLM_INTRO_PROMPT
+from backend.prompts import LLM_BASE_PROMPT, LLM_INTRO_PROMPT
 
 load_dotenv()
 
