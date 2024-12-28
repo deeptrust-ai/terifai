@@ -44,7 +44,7 @@ export const DeviceSelect: React.FC<DeviceSelectProps> = ({
       "loaded",
     ];
     if (meetingStatesBeforeJoin.includes(meetingState)) {
-      daily.startCamera({ startVideoOff: true, startAudioOff: false });
+      daily.startCamera({ startAudioOff: false });
     }
   }, [daily, microphones]);
 

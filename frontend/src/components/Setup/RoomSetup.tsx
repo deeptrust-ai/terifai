@@ -14,7 +14,6 @@ interface RoomSetupProps {
 }
 
 const serverURL = import.meta.env.VITE_SERVER_URL;
-const manualRoomCreation = !!parseInt(import.meta.env.VITE_MANUAL_ROOM_ENTRY);
 
 export const RoomSetup: React.FC<RoomSetupProps> = ({
   serverUrl,
@@ -34,25 +33,13 @@ export const RoomSetup: React.FC<RoomSetupProps> = ({
           </p>
         </Alert>
       )}
-      {import.meta.env.DEV && !serverURL && !manualRoomCreation && (
-        <Alert
-          title="Error: Auto room creation without server URL"
-          intent="danger"
-        >
-          <p className="text-sm">
-            You have not set `VITE_MANUAL_ROOM_ENTRY` (auto room creation mode)
-            without setting `VITE_SERVER_URL`
-          </p>
-        </Alert>
-      )}
       <SettingsList
         serverUrl={serverUrl}
-        manualRoomCreation={manualRoomCreation}
         roomQueryString={roomQs}
         roomQueryStringValid={roomQueryStringValid}
       />
 
-      {manualRoomCreation && !roomQs && (
+      {!roomQs && (
         <RoomInput
           onChange={handleCheckRoomUrl}
           error={roomError && "Please enter valid room URL"}
