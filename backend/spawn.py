@@ -11,7 +11,7 @@ FLY_HEADERS = {
     "Content-Type": "application/json",
 }
 
-MAX_RETRIES = 10
+MAX_RETRIES = 24
 RETRY_DELAY = 5
 
 
