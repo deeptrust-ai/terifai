@@ -45,7 +45,7 @@ def create_room() -> tuple[str, str]:
         Exception: If the request to create the room fails or if the response does not contain the room URL or room name.
     """
     room_props = {
-        "exp": time.time() + 60 * 60,  # 1 hour
+        "exp": time.time() + 5 * 60,  # 5 minutes
         "enable_chat": True,
         "enable_emoji_reactions": True,
         "eject_at_room_exp": True,
@@ -106,7 +106,7 @@ def get_token(room_url: str) -> str:
             "No Daily API key specified. set DAILY_API_KEY in your environment to specify a Daily API key, available from https://dashboard.daily.co/developers."
         )
 
-    expiration: float = time.time() + 60 * 60
+    expiration: float = time.time() + 5 * 60
     room_name = get_name_from_url(room_url)
 
     res: requests.Response = requests.post(
