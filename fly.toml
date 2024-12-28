@@ -16,9 +16,6 @@ primary_region = 'sjc'
   min_machines_running = 1
   processes = ['app']
 
-[env]
-  WHEEL = "${WHEEL}"
-
 [[vm]]
   memory = '1gb'
   cpu_kind = 'shared'

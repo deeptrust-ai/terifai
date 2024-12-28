@@ -33,7 +33,7 @@ def spawn_fly_machine(room_url: str, token: str):
             "auto_destroy": True,
             "init": {"cmd": cmd},
             "restart": {"policy": "no"},
-            "guest": {"cpu_kind": "shared", "cpus": 1, "memory_mb": 1024},
+            "guest": {"cpu_kind": "shared", "cpus": 1, "memory_mb": 2048},
         },
     }
 
