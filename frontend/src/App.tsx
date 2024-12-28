@@ -51,10 +51,12 @@ const checkRoomUrl = (url: string | null): boolean =>
   !!(url && /^(https?:\/\/[^.]+(\.staging)?\.daily\.co\/[^/]+)$/.test(url));
 
 // Show config options
-const showConfigOptions = import.meta.env.VITE_SHOW_CONFIG;
+const showConfigOptions = parseInt(import.meta.env.VITE_SHOW_CONFIG)
+  ? true
+  : false;
 
 // Mic mode
-const isOpenMic = import.meta.env.VITE_OPEN_MIC ? true : false;
+const isOpenMic = parseInt(import.meta.env.VITE_OPEN_MIC) ? true : false;
 
 export default function App() {
   const daily = useDaily();
