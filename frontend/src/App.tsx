@@ -187,7 +187,7 @@ export default function App() {
             handleStartAudioOff={() => setStartAudioOff(!startAudioOff)}
           />
         </CardContent>
-        <CardFooter>
+        <CardFooter className="flex flex-col gap-4">
           <Button
             key="start"
             fullWidthMobile
@@ -197,6 +197,11 @@ export default function App() {
             {state !== "configuring" && <Loader2 className="animate-spin" />}
             {status_text[state as keyof typeof status_text]}
           </Button>
+          {state === "requesting_agent" && (
+            <p className="text-sm text-muted-foreground animate-pulse">
+              Depending on traffic, this may take 1 to 2 minutes...
+            </p>
+          )}
         </CardFooter>
       </Card>
     );
