@@ -68,11 +68,15 @@ fastapi==0.111.0
     # via modal
 fastapi-cli==0.0.4
     # via fastapi
+filelock==3.16.1
+    # via torch
 flatbuffers==24.3.25
     # via onnxruntime
 frozenlist==1.4.1
     # via aiohttp
     # via aiosignal
+fsspec==2024.12.0
+    # via torch
 future==1.0.0
     # via pyloudnorm
 grpclib==0.4.7
@@ -109,6 +113,7 @@ iterators==0.2.0
     # via cartesia
 jinja2==3.1.4
     # via fastapi
+    # via torch
 jiter==0.6.1
     # via openai
 loguru==0.7.2
@@ -132,6 +137,8 @@ multidict==6.0.5
     # via yarl
 mypy-extensions==1.0.0
     # via typing-inspect
+networkx==3.4.2
+    # via torch
 numpy==1.26.4
     # via onnxruntime
     # via pipecat-ai
@@ -189,6 +196,8 @@ rich==13.7.1
 scipy==1.14.1
     # via pipecat-ai
     # via pyloudnorm
+setuptools==75.6.0
+    # via torch
 shellingham==1.5.4
     # via typer
 sigtools==4.0.1
@@ -201,10 +210,14 @@ starlette==0.37.2
     # via fastapi
 sympy==1.13.1
     # via onnxruntime
+    # via torch
 synchronicity==0.6.7
     # via modal
 toml==0.10.2
     # via modal
+torch==2.5.1
+    # via torchaudio
+torchaudio==2.5.1
 tqdm==4.66.4
     # via openai
 typer==0.12.3
@@ -223,6 +236,7 @@ typing-extensions==4.12.2
     # via pydantic
     # via pydantic-core
     # via synchronicity
+    # via torch
     # via typer
     # via typing-inspect
 typing-inspect==0.9.0
