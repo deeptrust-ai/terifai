@@ -25,7 +25,7 @@ def spawn_fly_machine(room_url: str, token: str):
     image = res.json()[0]["config"]["image"]
 
     # Machine configuration
-    cmd = f"python -m bot --room_url {room_url} --token {token}"
+    cmd = f"python -m backend.bot --room_url {room_url} --token {token}"
     cmd = cmd.split()
     worker_props = {
         "config": {
