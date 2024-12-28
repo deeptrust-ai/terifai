@@ -1,18 +1,21 @@
-import aiohttp
 import io
 import os
 import time
-import requests
 import wave
 from dataclasses import dataclass
 
+import aiohttp
+import requests
+from dotenv import load_dotenv
+from loguru import logger
 from modal import Cls, Function, functions
+from pipecat.audio.utils import calculate_audio_volume, exp_smoothing
 from pipecat.frames.frames import (
-    Frame,
     AudioRawFrame,
     CancelFrame,
     DataFrame,
     EndFrame,
+    Frame,
     TranscriptionFrame,
 )
 from pipecat.processors.frame_processor import FrameDirection, FrameProcessor
@@ -20,10 +23,6 @@ from pipecat.services.cartesia import CartesiaTTSService
 from pipecat.services.deepgram import DeepgramSTTService
 from pipecat.services.elevenlabs import ElevenLabsTTSService
 from pipecat.services.xtts import XTTSService
-from pipecat.audio.utils import calculate_audio_volume, exp_smoothing
-
-from dotenv import load_dotenv
-from loguru import logger
 
 load_dotenv()
 
@@ -57,7 +56,6 @@ class AudioFrameTerrify(DataFrame):
 
 
 class TranscriptionLogger(FrameProcessor):
-
     async def process_frame(self, frame: Frame, direction: FrameDirection):
         await super().process_frame(frame, direction)
 

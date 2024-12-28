@@ -1,14 +1,14 @@
-import os
 import argparse
+import os
 from dataclasses import asdict
 
-from fastapi import FastAPI, Request, HTTPException
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-from helpers import DailyConfig, get_daily_config, get_name_from_url, get_token
-from spawn import spawn_fly_machine, get_machine_status
+from backend.helpers import DailyConfig, get_daily_config, get_name_from_url, get_token
+from backend.spawn import get_machine_status, spawn_fly_machine
 
 MAX_BOTS_PER_ROOM = 1
 
@@ -116,4 +116,6 @@ if __name__ == "__main__":
 
     config = parser.parse_args()
 
-    uvicorn.run("server:app", host=config.host, port=config.port, reload=config.reload)
+    uvicorn.run(
+        "backend.server:app", host=config.host, port=config.port, reload=config.reload
+    )

@@ -1,10 +1,10 @@
 import os
-import requests
 import time
 import urllib
 import urllib.parse
 from dataclasses import dataclass
 
+import requests
 from dotenv import load_dotenv
 
 load_dotenv()
