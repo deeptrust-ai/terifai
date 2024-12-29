@@ -7,6 +7,10 @@ import time
 import aiohttp
 from dotenv import load_dotenv
 
+## VAD
+from pipecat.audio.vad.silero import SileroVADAnalyzer
+from pipecat.audio.vad.vad_analyzer import VADParams
+
 ## Frames
 from pipecat.frames.frames import EndFrame, LLMMessagesFrame
 
@@ -27,10 +31,6 @@ from pipecat.services.openai import OpenAILLMService
 # Pipecat
 ## Transports
 from pipecat.transports.services.daily import DailyParams, DailyTransport
-from pipecat.vad.silero import SileroVADAnalyzer
-
-## VAD
-from pipecat.vad.vad_analyzer import VADParams
 
 from backend.helpers import get_daily_config
 from backend.processors import (
