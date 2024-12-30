@@ -174,12 +174,16 @@ if __name__ == "__main__":
     parser.add_argument("--default", action="store_true", help="Default configurations")
     parser.add_argument("--xtts", action="store_true", help="Use XTTS")
     parser.add_argument("--elevenlabs", action="store_true", help="Use ElevenLabs")
-    config = parser.parse_args()
+    args = parser.parse_args()
+    room_url = args.room_url
+    token = args.token
 
-    if config.default:
+    if args.default:
         config = get_daily_config()
+        room_url = config.room_url
+        token = config.token
 
-    if config.room_url is None:
+    if room_url is None:
         raise ValueError("Room URL is required")
 
-    asyncio.run(main(config.room_url, config.token, config.xtts, config.elevenlabs))
+    asyncio.run(main(room_url, token, args.xtts, args.elevenlabs))
