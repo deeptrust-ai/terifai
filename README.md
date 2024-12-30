@@ -41,8 +41,17 @@ rye run bot
 #### Full Application (Backend + Frontend)
 1. Start the backend server (in one terminal):
    ```bash
+   # For production mode (using Fly.io for bot instances)
    rye run server
+
+   # For local development (running bots locally)
+   rye run server --local
    ```
+
+   The `--local` flag runs bot instances directly on your machine instead of spawning Fly.io machines. This is useful for:
+   - Local development without Fly.io credentials
+   - Debugging bot behavior
+   - Testing without cloud resources
 
 2. Start the frontend (in another terminal):
    ```bash
