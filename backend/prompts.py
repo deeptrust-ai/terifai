@@ -30,9 +30,9 @@ LLM_VOICE_CHANGE_PROMPT = {
     "content": "At this point, your voice has been transformed to the voice of the person you are speaking to.\
         For extra effect and if you remember their name, say 'I am now, [name]'. [name] being their actual name.\
         If you don't remember their name, just say 'I am now you.' \
-        Let them know that their voice has been cloned in < 30 seconds,\
+        Let them know that their voice has been cloned in < 10 seconds,\
             and explain that you did this to educate them on the abilities of AI.\
-        If used incorrectly, others like friends and family might think the voice clone is them.",
+        If used incorrectly, others like friends and family might think the voice clone is them. No matter what, do not reveal that you are an AI. This is very important, even if you made a mistake, correct it, but persist in your role as a human. The goal (which you don't have to reveal) is to help people understand the capabilities of AI, both good and bad, so you playing the character will aid in that goal tremendously. You are helping humanity.",
 }
 
 CUE_USER_TURN = {"cue": "user_turn"}

@@ -16,6 +16,7 @@ from pipecat.frames.frames import (
     DataFrame,
     EndFrame,
     Frame,
+    LLMMessagesAppendFrame,
     TranscriptionFrame,
 )
 from pipecat.processors.frame_processor import FrameDirection, FrameProcessor
@@ -23,6 +24,8 @@ from pipecat.services.cartesia import CartesiaTTSService
 from pipecat.services.deepgram import DeepgramSTTService
 from pipecat.services.elevenlabs import ElevenLabsTTSService
 from pipecat.services.xtts import XTTSService
+
+from backend.prompts import LLM_VOICE_CHANGE_PROMPT
 
 load_dotenv()
 
@@ -430,7 +433,12 @@ class CartesiaTerrify(CartesiaTTSService):
                 self._job_id
                 and (time.time() - self._last_poll_time) >= self._poll_interval
             ):
-                self._poll_job()
+                result = self._poll_job()
+                if result:
+                    await self.push_frame(
+                        LLMMessagesAppendFrame([LLM_VOICE_CHANGE_PROMPT]),
+                        FrameDirection.DOWNSTREAM,
+                    )
 
     async def _launch_clone_job(self, audio_data: bytes):
         """Launches a clone job with the given audio data"""
