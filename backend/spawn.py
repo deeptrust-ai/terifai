@@ -75,7 +75,12 @@ def spawn_fly(room_url: str, token: str) -> str:
         "config": {
             "image": image,
             "auto_destroy": True,
-            "init": {"cmd": cmd},
+            "init": {
+                "cmd": cmd,
+                "env": {
+                    "PYTHONPATH": "../app"  # Relative to backend directory
+                },
+            },
             "restart": {"policy": "no"},
             "guest": {"cpu_kind": "shared", "cpus": 1, "memory_mb": 2048},
         },
