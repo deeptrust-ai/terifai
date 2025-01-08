@@ -44,6 +44,7 @@ def spawn_local(room_url: str, token: str, selectedPrompt: str) -> str:
             "backend.bot",
             f"--room_url={room_url}",
             f"--token={token}",
+            f"--prompt={selectedPrompt}",
         ],
         env=env,
         cwd=project_root,

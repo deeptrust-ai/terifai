@@ -368,7 +368,7 @@ class CartesiaTerrify(CartesiaTTSService):
         self,
         api_key: str = CARTESIA_API_KEY,
         voice_id: str = DEFAULT_CARTESIA_VOICE_ID,
-        selectedPrompt=str,
+        selectedPrompt=None,
         *args,
         **kwargs,
     ):
@@ -452,6 +452,7 @@ class CartesiaTerrify(CartesiaTTSService):
             ):
                 result = self._poll_job()
                 if result:
+                    print("HERE IS THE NEW PROMPT FROM THE PROCESSOR:", [PROMPT_MAP[self.selectedPrompt]])
                     await self.push_frame(
                         LLMMessagesAppendFrame([PROMPT_MAP[self.selectedPrompt]]),
                         FrameDirection.DOWNSTREAM,
