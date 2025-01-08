@@ -4,7 +4,7 @@ import { ArrowRight, Ear, Loader2 } from "lucide-react";
 
 import MaintenancePage from "./components/MaintenancePage";
 import Session from "./components/Session";
-import { Configure, RoomSetup } from "./components/Setup";
+import { Configure, PromptSelect, RoomSetup } from "./components/Setup";
 import { Alert } from "./components/ui/alert";
 import { Button } from "./components/ui/button";
 import {
@@ -64,6 +64,8 @@ export default function App() {
   const [state, setState] = useState<State>(
     showConfigOptions ? "idle" : "configuring"
   );
+
+  const [selectedPrompt, setSelectedPrompt] = useState("default");
   const [error, setError] = useState<string | null>(null);
   const [startAudioOff, setStartAudioOff] = useState<boolean>(false);
   const [roomUrl, setRoomUrl] = useState<string | null>(roomQs || null);
@@ -185,6 +187,10 @@ export default function App() {
           <Configure
             startAudioOff={startAudioOff}
             handleStartAudioOff={() => setStartAudioOff(!startAudioOff)}
+          />
+          <PromptSelect
+            selectedSetting={selectedPrompt}
+            onSettingChange={setSelectedPrompt}
           />
         </CardContent>
         <CardFooter className="flex flex-col gap-4">
