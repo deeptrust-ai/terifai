@@ -10,16 +10,21 @@ export const PromptSelect: React.FC<SelectProps> = ({
   selectedSetting 
 }) => {
   return (
-    <Select
-      onChange={(e) => onSettingChange(e.target.value)}
-      defaultValue={selectedSetting}
-      icon={null}
-    >
-      <option value="default" disabled>Select a prompt</option>
-      <option value="casual">Casual Conversation</option>
-      <option value="professional">Professional Meeting</option>
-      <option value="interview">Interview Mode</option>
-      <option value="creative">Creative Discussion</option>
-    </Select>
+    <div className="flex flex-col gap-2">
+      <h3 className="text-sm font-bold">Prompt Customization</h3>
+      <Select
+        onChange={(e) => {
+          console.log('Selected prompt:', e.target.value);
+          onSettingChange(e.target.value);
+        }}
+        defaultValue={selectedSetting}
+        icon={null}
+      >
+        <option value="default" disabled>Select a prompt</option>
+        <option value="family">Family Member Distress (Relative Scam)</option>
+        <option value="corporate">Corporate Emergency (C-Suite Impersonation)</option>
+        <option value="legal">Law Enforcement/Regulatory Impersonation</option>
+      </Select>
+    </div>
   );
 };

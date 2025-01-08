@@ -74,6 +74,7 @@ async def create_room(request: Request) -> JSONResponse:
 class StartAgentItem(BaseModel):
     room_url: str
     token: str
+    selectedPrompt: str
 
 
 @app.post("/start")
@@ -83,10 +84,12 @@ async def start_agent(item: StartAgentItem, request: Request) -> JSONResponse:
 
     room_url = item.room_url
     token = item.token
+    selectedPrompt = item.selectedPrompt
+    print("server.py:", selectedPrompt)
 
     try:
         local = request.app.state.is_local_mode
-        bot_id = spawn(room_url, token, local=local)
+        bot_id = spawn(room_url, token, selectedPrompt, local=local)
         bot_machines[bot_id] = room_url
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to start bot: {e}")

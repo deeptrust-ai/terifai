@@ -23,7 +23,8 @@ RETRY_DELAY = 5
 local_bots: Dict[str, Tuple[subprocess.Popen, str]] = {}
 
 
-def spawn_local(room_url: str, token: str) -> str:
+def spawn_local(room_url: str, token: str, selectedPrompt: str) -> str:
+    print("HERE IS THE SELECTED PROMPT:", selectedPrompt)
     """Spawn a local bot process and return its ID"""
     bot_id = str(uuid.uuid4())
     logger.info(f"Spawning local bot with id: {bot_id}")
@@ -108,13 +109,13 @@ def spawn_fly(room_url: str, token: str) -> str:
     raise Exception(f"Bot failed to enter started state after {MAX_RETRIES} retries")
 
 
-def spawn(room_url: str, token: str, local: bool = False) -> str:
+def spawn(room_url: str, token: str, selectedPrompt: str, local: bool = False) -> str:
     """Unified interface to spawn a bot either locally or on Fly"""
     logger.debug(
         f"Spawning bot with room_url: {room_url} and token: {token}, local: {local}"
     )
     if local:
-        return spawn_local(room_url, token)
+        return spawn_local(room_url, token, selectedPrompt)
     else:
         return spawn_fly(room_url, token)
 

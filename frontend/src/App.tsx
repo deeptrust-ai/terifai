@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDaily } from "@daily-co/daily-react";
 import { ArrowRight, Ear, Loader2 } from "lucide-react";
 
@@ -73,6 +73,10 @@ export default function App() {
     (roomQs && checkRoomUrl(roomQs)) || false
   );
 
+  useEffect(() => {
+    console.log('Prompt selected in App:', selectedPrompt);
+  }, [selectedPrompt]);
+  
   function handleRoomUrl() {
     console.log("here", autoRoomCreation, serverUrl, checkRoomUrl(roomUrl));
     if ((autoRoomCreation && serverUrl) || checkRoomUrl(roomUrl)) {
@@ -84,7 +88,7 @@ export default function App() {
     }
   }
 
-  async function start() {
+  async function start(selectedPrompt: string) {
     if (!daily || (!roomUrl && !autoRoomCreation)) return;
 
     let data;
@@ -108,7 +112,8 @@ export default function App() {
         data = await fetch_start_agent(
           config.room_url,
           config.token,
-          serverUrl
+          serverUrl,
+          selectedPrompt
         );
 
         if (data.error) {
@@ -197,7 +202,7 @@ export default function App() {
           <Button
             key="start"
             fullWidthMobile
-            onClick={() => start()}
+            onClick={() => start(selectedPrompt)}
             disabled={state !== "configuring"}
           >
             {state !== "configuring" && <Loader2 className="animate-spin" />}

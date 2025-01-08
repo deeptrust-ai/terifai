@@ -19,14 +19,15 @@ export const fetch_create_room = async (serverUrl: string) => {
 export const fetch_start_agent = async (
   roomUrl: string,
   token: string,
-  serverUrl: string
+  serverUrl: string,
+  selectedPrompt: string
 ) => {
   const req = await fetch(serverUrl + "start", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ room_url: roomUrl, token: token }),
+    body: JSON.stringify({ room_url: roomUrl, token: token, selectedPrompt: selectedPrompt }),
   });
 
   const data = await req.json();
