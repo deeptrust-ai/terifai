@@ -21,7 +21,7 @@ export const PromptSelect: React.FC<SelectProps> = ({
         icon={null}
       >
         <option value="default" disabled>Select a prompt</option>
-        <option value="family">Family Member Distress (Relative Scam)</option>
+        <option value="family">Family Member Distress (Family Impersonation)</option>
         <option value="corporate">Corporate Emergency (C-Suite Impersonation)</option>
         <option value="legal">Law Enforcement/Regulatory Impersonation</option>
       </Select>

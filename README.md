@@ -56,7 +56,7 @@ rye run bot
 2. Start the frontend (in another terminal):
    ```bash
    cd frontend
-   bun start
+   bun run dev
    ```
 
 The application will be running at:

@@ -25,7 +25,12 @@ from pipecat.services.deepgram import DeepgramSTTService
 from pipecat.services.elevenlabs import ElevenLabsTTSService
 from pipecat.services.xtts import XTTSService
 
-from backend.prompts import LLM_VOICE_CHANGE_PROMPT
+from backend.prompts import (
+    LLM_VOICE_CHANGE_PROMPT,
+    LLM_VOICE_CHANGE_PROMPT_FAMILY, 
+    LLM_VOICE_CHANGE_PROMPT_CORPORATE,
+    LLM_VOICE_CHANGE_PROMPT_LEGAL
+)
 
 load_dotenv()
 
@@ -35,6 +40,14 @@ DEFAULT_CARTESIA_VOICE_ID = "e00d0e4c-a5c8-443f-a8a3-473eb9a62355"
 CARTESIA_API_KEY = os.environ.get("CARTESIA_API_KEY")
 DEEPGRAM_API_KEY = os.environ.get("DEEPGRAM_API_KEY")
 DEFAULT_VOICE_ID = os.environ.get("ELEVENLABS_VOICE_ID")
+
+# voice change prompt map
+PROMPT_MAP = {
+    "family": LLM_VOICE_CHANGE_PROMPT_FAMILY,
+    "corporate": LLM_VOICE_CHANGE_PROMPT_CORPORATE,
+    "legal": LLM_VOICE_CHANGE_PROMPT_LEGAL
+
+}
 
 # settings
 MIN_SECS_TO_LAUNCH = int(os.environ.get("MIN_SECS_TO_LAUNCH", 30))
@@ -355,6 +368,7 @@ class CartesiaTerrify(CartesiaTTSService):
         self,
         api_key: str = CARTESIA_API_KEY,
         voice_id: str = DEFAULT_CARTESIA_VOICE_ID,
+        selectedPrompt=str,
         *args,
         **kwargs,
     ):
@@ -375,6 +389,9 @@ class CartesiaTerrify(CartesiaTTSService):
         self._job_completed = False
         self._last_poll_time = time.time()
         self._poll_interval = DEFAULT_POLL_INTERVAL_SECS
+
+        # custom prompt
+        self.selectedPrompt = selectedPrompt
 
         logger.info("CartesiaTerrify initialized")
 
@@ -436,7 +453,7 @@ class CartesiaTerrify(CartesiaTTSService):
                 result = self._poll_job()
                 if result:
                     await self.push_frame(
-                        LLMMessagesAppendFrame([LLM_VOICE_CHANGE_PROMPT]),
+                        LLMMessagesAppendFrame([PROMPT_MAP[self.selectedPrompt]]),
                         FrameDirection.DOWNSTREAM,
                     )
 
