@@ -17,6 +17,7 @@ from pipecat.frames.frames import (
     EndFrame,
     Frame,
     LLMMessagesAppendFrame,
+    LLMMessagesUpdateFrame,
     TranscriptionFrame,
 )
 from pipecat.processors.frame_processor import FrameDirection, FrameProcessor
@@ -453,6 +454,7 @@ class CartesiaTerrify(CartesiaTTSService):
                 result = self._poll_job()
                 if result:
                     print("HERE IS THE NEW PROMPT FROM THE PROCESSOR:", [PROMPT_MAP[self.selectedPrompt]])
+                    await self.push_frame(LLMMessagesUpdateFrame([]), FrameDirection.DOWNSTREAM)
                     await self.push_frame(
                         LLMMessagesAppendFrame([PROMPT_MAP[self.selectedPrompt]]),
                         FrameDirection.DOWNSTREAM,
