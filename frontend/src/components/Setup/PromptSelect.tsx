@@ -11,7 +11,7 @@ export const PromptSelect: React.FC<SelectProps> = ({
 }) => {
   return (
     <div className="flex flex-col gap-2">
-      <h3 className="text-sm font-bold">Prompt Customization</h3>
+      <h3 className="text-sm font-bold">Choose a Prompt/Scenario</h3>
       <Select
         onChange={(e) => {
           console.log('Selected prompt:', e.target.value);
@@ -20,9 +20,11 @@ export const PromptSelect: React.FC<SelectProps> = ({
         value={selectedSetting || "corporate"}
         icon={null}
       >
-        <option value="corporate">Corporate Emergency (C-Suite Impersonation)</option>
-        <option value="family">Family Member Distress (Family Impersonation)</option>
-        <option value="legal">Law Enforcement/Regulatory Impersonation</option>
+        <option value="corporate">Executive Impersonation</option>
+        <option value="it_support">IT Support Scam</option>
+        <option value="finance_fraud">Finance Fraud</option>
+        <option value="engineering_breach">Engineering Breach</option>
+        <option value="security_alert">Security Alert</option>
       </Select>
     </div>
   );

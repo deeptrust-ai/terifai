@@ -27,10 +27,11 @@ from pipecat.services.elevenlabs import ElevenLabsTTSService
 from pipecat.services.xtts import XTTSService
 
 from backend.prompts import (
-    LLM_VOICE_CHANGE_PROMPT,
-    LLM_VOICE_CHANGE_PROMPT_FAMILY, 
+    LLM_VOICE_CHANGE_PROMPT_IT_SUPPORT, 
     LLM_VOICE_CHANGE_PROMPT_CORPORATE,
-    LLM_VOICE_CHANGE_PROMPT_LEGAL
+    LLM_VOICE_CHANGE_PROMPT_FINANCE_FRAUD,
+    LLM_VOICE_CHANGE_PROMPT_ENGINEERING_BREACH,
+    LLM_VOICE_CHANGE_PROMPT_SECURITY_ALERT
 )
 
 load_dotenv()
@@ -44,9 +45,11 @@ DEFAULT_VOICE_ID = os.environ.get("ELEVENLABS_VOICE_ID")
 
 # voice change prompt map
 PROMPT_MAP = {
-    "family": LLM_VOICE_CHANGE_PROMPT_FAMILY,
+    "it_support": LLM_VOICE_CHANGE_PROMPT_IT_SUPPORT,
     "corporate": LLM_VOICE_CHANGE_PROMPT_CORPORATE,
-    "legal": LLM_VOICE_CHANGE_PROMPT_LEGAL
+    "finance_fraud": LLM_VOICE_CHANGE_PROMPT_FINANCE_FRAUD,
+    "engineering_breach": LLM_VOICE_CHANGE_PROMPT_ENGINEERING_BREACH,
+    "security_alert": LLM_VOICE_CHANGE_PROMPT_SECURITY_ALERT,
 
 }
 
