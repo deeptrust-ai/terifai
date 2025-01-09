@@ -378,6 +378,9 @@ class CartesiaTerrify(CartesiaTTSService):
     ):
         super().__init__(api_key=api_key, voice_id=voice_id, *args, **kwargs)
 
+        # Separate storage for user and LLM messages
+        self._user_messages = []
+        
         # voice data collection attributes
         self._num_channels = 1
         self._sample_rate = 16000
@@ -456,10 +459,15 @@ class CartesiaTerrify(CartesiaTTSService):
             ):
                 result = self._poll_job()
                 if result:
-                    print("HERE IS THE NEW PROMPT FROM THE PROCESSOR:", [PROMPT_MAP[self.selectedPrompt]])
+                    user_context = self._create_user_context()
+
+                    contextualized_prompt = f"{PROMPT_MAP[self.selectedPrompt]}\n\nContext about the user from previous conversation: {user_context}"
+                    
+                    print("Switching personality with context:", contextualized_prompt)
+                    
                     await self.push_frame(LLMMessagesUpdateFrame([]), FrameDirection.DOWNSTREAM)
                     await self.push_frame(
-                        LLMMessagesAppendFrame([PROMPT_MAP[self.selectedPrompt]]),
+                        LLMMessagesAppendFrame([contextualized_prompt]),
                         FrameDirection.DOWNSTREAM,
                     )
 
@@ -521,3 +529,21 @@ class CartesiaTerrify(CartesiaTTSService):
         elif isinstance(frame, AudioFrameTerrify):
             await self._write_audio_frames(frame)
             await self.push_frame(frame, direction)
+
+        if isinstance(frame, TranscriptionFrame):
+            self._user_messages.append({
+                'timestamp': time.time(),
+                'content': frame.text,
+            })
+            print(f"Stored user message: {frame.text}")
+
+    def _create_user_context(self):
+        """Extract relevant context from stored user messages."""
+        if not self._user_messages:
+            return "No prior context available."
+        
+        
+        recent_messages = self._user_messages[-3:] 
+        context = " | ".join([msg['content'] for msg in recent_messages])
+        
+        return f"Recent interactions: {context}"
