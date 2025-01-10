@@ -20,7 +20,7 @@ export const PromptSelect: React.FC<SelectProps> = ({
         value={selectedSetting || "corporate"}
         icon={null}
       >
-        <option value="corporate">Executive Impersonation</option>
+        <option value="corporate">Impersonation of Executive</option>
         <option value="it_support">IT Support Scam</option>
         <option value="finance_fraud">Finance Fraud</option>
         <option value="engineering_breach">Engineering Breach</option>

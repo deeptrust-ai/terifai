@@ -3,6 +3,7 @@ import os
 import time
 import wave
 from dataclasses import dataclass
+from typing import List, Dict
 
 import aiohttp
 import requests
@@ -58,6 +59,28 @@ MIN_SECS_TO_LAUNCH = int(os.environ.get("MIN_SECS_TO_LAUNCH", 30))
 DEFAULT_POLL_INTERVAL_SECS = 5
 logger.info(f"Default voice ID: {DEFAULT_VOICE_ID}")
 
+# Create a global message store
+class MessageStore:
+    _instance = None
+    _messages: List[Dict] = []
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(MessageStore, cls).__new__(cls)
+        return cls._instance
+
+    @classmethod
+    def add_message(cls, text: str):
+        cls._messages.append({
+            'timestamp': time.time(),
+            'content': text
+        })
+        logger.info(f"Stored message: {text}")
+
+    @classmethod
+    def get_recent_messages(cls, count: int = 3) -> List[Dict]:
+        return cls._messages[-count:]
+
 
 @dataclass
 class AudioFrameTerrify(DataFrame):
@@ -81,6 +104,8 @@ class TranscriptionLogger(FrameProcessor):
 
         if isinstance(frame, TranscriptionFrame):
             logger.debug(f"Transcription: {frame.text}")
+            # Store message globally
+            MessageStore.add_message(frame.text)
 
         await self.push_frame(frame)
 
@@ -377,9 +402,6 @@ class CartesiaTerrify(CartesiaTTSService):
         **kwargs,
     ):
         super().__init__(api_key=api_key, voice_id=voice_id, *args, **kwargs)
-
-        # Separate storage for user and LLM messages
-        self._user_messages = []
         
         # voice data collection attributes
         self._num_channels = 1
@@ -453,21 +475,23 @@ class CartesiaTerrify(CartesiaTTSService):
                 self._content.seek(0)
                 await self._launch_clone_job(self._content.read())
                 (self._content, self._wave) = self._new_wave()
-            elif (
-                self._job_id
-                and (time.time() - self._last_poll_time) >= self._poll_interval
-            ):
+            elif self._job_id and (time.time() - self._last_poll_time) >= self._poll_interval:
                 result = self._poll_job()
                 if result:
-                    user_context = self._create_user_context()
-
-                    contextualized_prompt = f"{PROMPT_MAP[self.selectedPrompt]}\n\nContext about the user from previous conversation: {user_context}"
+                    # Get recent messages directly from MessageStore
+                    recent_messages = MessageStore.get_recent_messages()
+                    context = " | ".join([msg['content'] for msg in recent_messages]) if recent_messages else "No prior context available."
                     
-                    print("Switching personality with context:", contextualized_prompt)
+                    system_message = {
+                        "role": "system",
+                        "content": f"{PROMPT_MAP[self.selectedPrompt]['content']}\n\nContext about the user from previous conversation: {context}"
+                    }
+                    
+                    logger.info(f"Switching personality with context: {system_message}")
                     
                     await self.push_frame(LLMMessagesUpdateFrame([]), FrameDirection.DOWNSTREAM)
                     await self.push_frame(
-                        LLMMessagesAppendFrame([contextualized_prompt]),
+                        LLMMessagesAppendFrame([system_message]),
                         FrameDirection.DOWNSTREAM,
                     )
 
@@ -529,21 +553,3 @@ class CartesiaTerrify(CartesiaTTSService):
         elif isinstance(frame, AudioFrameTerrify):
             await self._write_audio_frames(frame)
             await self.push_frame(frame, direction)
-
-        if isinstance(frame, TranscriptionFrame):
-            self._user_messages.append({
-                'timestamp': time.time(),
-                'content': frame.text,
-            })
-            print(f"Stored user message: {frame.text}")
-
-    def _create_user_context(self):
-        """Extract relevant context from stored user messages."""
-        if not self._user_messages:
-            return "No prior context available."
-        
-        
-        recent_messages = self._user_messages[-3:] 
-        context = " | ".join([msg['content'] for msg in recent_messages])
-        
-        return f"Recent interactions: {context}"
