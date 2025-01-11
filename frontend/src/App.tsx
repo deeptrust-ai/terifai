@@ -65,7 +65,7 @@ export default function App() {
     showConfigOptions ? "idle" : "configuring"
   );
 
-  const [selectedPrompt, setSelectedPrompt] = useState("corporate");
+  const [selectedPrompt, setSelectedPrompt] = useState("default");
   const [error, setError] = useState<string | null>(null);
   const [startAudioOff, setStartAudioOff] = useState<boolean>(false);
   const [roomUrl, setRoomUrl] = useState<string | null>(roomQs || null);

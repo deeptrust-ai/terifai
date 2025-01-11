@@ -28,6 +28,7 @@ from pipecat.services.elevenlabs import ElevenLabsTTSService
 from pipecat.services.xtts import XTTSService
 
 from backend.prompts import (
+    LLM_VOICE_CHANGE_PROMPT_DEFAULT,
     LLM_VOICE_CHANGE_PROMPT_IT_SUPPORT, 
     LLM_VOICE_CHANGE_PROMPT_CORPORATE,
     LLM_VOICE_CHANGE_PROMPT_FINANCE_FRAUD,
@@ -46,6 +47,7 @@ DEFAULT_VOICE_ID = os.environ.get("ELEVENLABS_VOICE_ID")
 
 # voice change prompt map
 PROMPT_MAP = {
+    "default": LLM_VOICE_CHANGE_PROMPT_DEFAULT,
     "it_support": LLM_VOICE_CHANGE_PROMPT_IT_SUPPORT,
     "corporate": LLM_VOICE_CHANGE_PROMPT_CORPORATE,
     "finance_fraud": LLM_VOICE_CHANGE_PROMPT_FINANCE_FRAUD,
@@ -59,7 +61,6 @@ MIN_SECS_TO_LAUNCH = int(os.environ.get("MIN_SECS_TO_LAUNCH", 30))
 DEFAULT_POLL_INTERVAL_SECS = 5
 logger.info(f"Default voice ID: {DEFAULT_VOICE_ID}")
 
-# Create a global message store
 class MessageStore:
     _instance = None
     _messages: List[Dict] = []
@@ -480,11 +481,12 @@ class CartesiaTerrify(CartesiaTTSService):
                 if result:
                     # Get recent messages directly from MessageStore
                     recent_messages = MessageStore.get_recent_messages()
-                    context = " | ".join([msg['content'] for msg in recent_messages]) if recent_messages else "No prior context available."
+                    context = ", ".join([msg['content'] for msg in recent_messages]) if recent_messages else "No prior context available."
                     
                     system_message = {
                         "role": "system",
-                        "content": f"{PROMPT_MAP[self.selectedPrompt]['content']}\n\nContext about the user from previous conversation: {context}"
+                        "content": f"{PROMPT_MAP[self.selectedPrompt]['content']}\n\n\
+                        Context about the user from previous conversation, only use this context if it is relevant to your goal from above: {context}"
                     }
                     
                     logger.info(f"Switching personality with context: {system_message}")

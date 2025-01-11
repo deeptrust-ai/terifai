@@ -17,9 +17,10 @@ export const PromptSelect: React.FC<SelectProps> = ({
           console.log('Selected prompt:', e.target.value);
           onSettingChange(e.target.value);
         }}
-        value={selectedSetting || "corporate"}
+        value={selectedSetting || "default"}
         icon={null}
       >
+        <option value="default">Select a Prompt</option>
         <option value="corporate">Impersonation of Executive</option>
         <option value="it_support">IT Support Scam</option>
         <option value="finance_fraud">Finance Fraud</option>
