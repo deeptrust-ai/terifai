@@ -61,27 +61,6 @@ MIN_SECS_TO_LAUNCH = int(os.environ.get("MIN_SECS_TO_LAUNCH", 30))
 DEFAULT_POLL_INTERVAL_SECS = 5
 logger.info(f"Default voice ID: {DEFAULT_VOICE_ID}")
 
-class MessageStore:
-    _instance = None
-    _messages: List[Dict] = []
-
-    def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super(MessageStore, cls).__new__(cls)
-        return cls._instance
-
-    @classmethod
-    def add_message(cls, text: str):
-        cls._messages.append({
-            'timestamp': time.time(),
-            'content': text
-        })
-        logger.info(f"Stored message: {text}")
-
-    @classmethod
-    def get_recent_messages(cls, count: int = 3) -> List[Dict]:
-        return cls._messages[-count:]
-
 
 @dataclass
 class AudioFrameTerrify(DataFrame):
@@ -104,7 +83,7 @@ class TranscriptionLogger(FrameProcessor):
         await super().process_frame(frame, direction)
 
         if isinstance(frame, TranscriptionFrame):
-            MessageStore.add_message(frame.text)
+            logger.debug(f"Transcription: {frame.text}")
 
         await self.push_frame(frame)
 
@@ -477,21 +456,9 @@ class CartesiaTerrify(CartesiaTTSService):
             elif self._job_id and (time.time() - self._last_poll_time) >= self._poll_interval:
                 result = self._poll_job()
                 if result:
-                    # Get recent messages directly from MessageStore
-                    recent_messages = MessageStore.get_recent_messages()
-                    context = ", ".join([msg['content'] for msg in recent_messages]) if recent_messages else "No prior context available."
-                    
-                    system_message = {
-                        "role": "system",
-                        "content": f"{PROMPT_MAP[self.selectedPrompt]['content']}\n\n\
-                        Context about the user from previous conversation, only use this context if it is relevant to your goal from above: {context}"
-                    }
-                    
-                    logger.info(f"Switching personality with context: {system_message}")
-                    
                     await self.push_frame(LLMMessagesUpdateFrame([]), FrameDirection.DOWNSTREAM)
                     await self.push_frame(
-                        LLMMessagesAppendFrame([system_message]),
+                        LLMMessagesAppendFrame([PROMPT_MAP[self.selectedPrompt]]),
                         FrameDirection.DOWNSTREAM,
                     )
 
