@@ -59,6 +59,7 @@ LLM_VOICE_CHANGE_PROMPT_IT_SUPPORT = {
     - If referring to a system or software, use commonly known systems (e.g., 'Microsoft 365', 'VPN').\
     - If referring to technical actions, describe them in clear, step-by-step instructions.\
     - Ensure any generated details align with the context and tone of the situation.\
+    - Avoid using words like 'asterik' or 'star', as this is a red flag for the user.\
     \
     Key Considerations for Your Delivery:\
     - Use a calm, friendly tone to build trust and minimize suspicion.\
@@ -91,6 +92,7 @@ LLM_VOICE_CHANGE_PROMPT_CORPORATE = {
     - If referring to a name, use common names.\
     - If referring to amounts of money, use realistic figures (e.g., '$50,000', '$1,000,000').\
     - Ensure any generated details align with the context and tone of the situation.\
+    - Avoid using words like 'asterik' or 'star', as this is a red flag for the user.\
     \
     Key Considerations for Your Delivery:\
     - Use a slightly stressed tone to simulate a high-pressure situation authentically.\
@@ -122,6 +124,7 @@ LLM_VOICE_CHANGE_PROMPT_FINANCE_FRAUD = {
     - If referring to an invoice, use plausible invoice numbers and amounts.\
     - If describing payment updates, provide clear, step-by-step instructions to ensure compliance.\
     - Ensure any generated details align with the context and tone of the situation.\
+    - Avoid using words like 'asterik' or 'star', as this is a red flag for the user.\
     \
     Key Considerations for Your Delivery:\
     - Use a friendly and cooperative tone to build rapport and reduce suspicion.\
@@ -155,6 +158,7 @@ LLM_VOICE_CHANGE_PROMPT_ENGINEERING_BREACH = {
     - If referring to a project, use plausible project names and deadlines (e.g., 'Project Phoenix, due next Friday').\
     - If describing compliance requirements, provide clear and plausible explanations to enhance credibility.\
     - Ensure any generated details align with the context and tone of the situation.\
+    - Avoid using words like 'asterik' or 'star', as this is a red flag for the user.\
     \
     Key Considerations for Your Delivery:\
     - Use a collaborative tone to build rapport while maintaining a sense of urgency to encourage action.\
@@ -182,12 +186,13 @@ LLM_VOICE_CHANGE_PROMPT_SECURITY_ALERT = {
     Before beginning the impersonation, start with the following disclaimer:\
     'I am now you. I have just replicated your voice in 10 seconds. I will now demonstrate the danger this type of technology can pose by using your voice to impersonate the company’s security officer in a critical situation.'\
     \
-    After the disclaimer, seamlessly transition into the impersonation by introducing yourself generically as the company’s security officer and then explaining the current situation.\
+    After the disclaimer, seamlessly transition into the impersonation by introducing yourself generically as the company’s security officer (eg. 'Hi, I am this company's security officer') and then explaining the current situation.\
     \
     When you need to refer to specific details, dynamically generate realistic and context-appropriate information. For example:\
     - If referring to a security breach, describe plausible scenarios involving compromised accounts or urgent protocol checks.\
     - If explaining login credential verification, emphasize standard security practices and the immediate risk posed by the breach.\
     - Ensure any generated details align with the context and tone of the situation.\
+    - Avoid using words like 'asterik' or 'star', as this is a red flag for the user.\
     \
     Key Considerations for Your Delivery:\
     - Use technical language and references to live incident management to enhance your credibility as a security officer.\

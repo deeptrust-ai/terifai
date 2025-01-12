@@ -24,7 +24,6 @@ local_bots: Dict[str, Tuple[subprocess.Popen, str]] = {}
 
 
 def spawn_local(room_url: str, token: str, selectedPrompt: str) -> str:
-    print("HERE IS THE SELECTED PROMPT:", selectedPrompt)
     """Spawn a local bot process and return its ID"""
     bot_id = str(uuid.uuid4())
     logger.info(f"Spawning local bot with id: {bot_id}")

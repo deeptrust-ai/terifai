@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDaily } from "@daily-co/daily-react";
 import { ArrowRight, Ear, Loader2 } from "lucide-react";
 
@@ -73,10 +73,6 @@ export default function App() {
     (roomQs && checkRoomUrl(roomQs)) || false
   );
 
-  useEffect(() => {
-    console.log('Prompt selected in App:', selectedPrompt);
-  }, [selectedPrompt]);
-  
   function handleRoomUrl() {
     console.log("here", autoRoomCreation, serverUrl, checkRoomUrl(roomUrl));
     if ((autoRoomCreation && serverUrl) || checkRoomUrl(roomUrl)) {

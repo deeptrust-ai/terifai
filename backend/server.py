@@ -85,7 +85,6 @@ async def start_agent(item: StartAgentItem, request: Request) -> JSONResponse:
     room_url = item.room_url
     token = item.token
     selectedPrompt = item.selectedPrompt
-    print("server.py:", selectedPrompt)
 
     try:
         local = request.app.state.is_local_mode

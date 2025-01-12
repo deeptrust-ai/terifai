@@ -104,8 +104,6 @@ class TranscriptionLogger(FrameProcessor):
         await super().process_frame(frame, direction)
 
         if isinstance(frame, TranscriptionFrame):
-            logger.debug(f"Transcription: {frame.text}")
-            # Store message globally
             MessageStore.add_message(frame.text)
 
         await self.push_frame(frame)
