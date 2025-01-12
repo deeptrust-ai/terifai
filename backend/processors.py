@@ -456,11 +456,7 @@ class CartesiaTerrify(CartesiaTTSService):
             elif self._job_id and (time.time() - self._last_poll_time) >= self._poll_interval:
                 result = self._poll_job()
                 if result:
-                    await self.push_frame(LLMMessagesUpdateFrame([]), FrameDirection.DOWNSTREAM)
-                    await self.push_frame(
-                        LLMMessagesAppendFrame([PROMPT_MAP[self.selectedPrompt]]),
-                        FrameDirection.DOWNSTREAM,
-                    )
+                    await self.push_frame(LLMMessagesUpdateFrame([PROMPT_MAP[self.selectedPrompt]]), FrameDirection.DOWNSTREAM)
 
     async def _launch_clone_job(self, audio_data: bytes):
         """Launches a clone job with the given audio data"""
