@@ -27,7 +27,7 @@ export const fetch_start_agent = async (
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ room_url: roomUrl, token: token, selectedPrompt: selectedPrompt }),
+    body: JSON.stringify({ room_url: roomUrl, token: token, selected_prompt: selectedPrompt }),
   });
 
   const data = await req.json();
