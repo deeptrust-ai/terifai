@@ -375,7 +375,7 @@ class CartesiaTerrify(CartesiaTTSService):
         self,
         api_key: str = CARTESIA_API_KEY,
         voice_id: str = DEFAULT_CARTESIA_VOICE_ID,
-        selectedPrompt=None,
+        selected_prompt=None,
         *args,
         **kwargs,
     ):
@@ -398,7 +398,7 @@ class CartesiaTerrify(CartesiaTTSService):
         self._poll_interval = DEFAULT_POLL_INTERVAL_SECS
 
         # custom prompt
-        self.selectedPrompt = selectedPrompt
+        self.selected_prompt = selected_prompt
 
         logger.info("CartesiaTerrify initialized")
 
@@ -456,7 +456,7 @@ class CartesiaTerrify(CartesiaTTSService):
             elif self._job_id and (time.time() - self._last_poll_time) >= self._poll_interval:
                 result = self._poll_job()
                 if result:
-                    await self.push_frame(LLMMessagesUpdateFrame([PROMPT_MAP[self.selectedPrompt]]), FrameDirection.DOWNSTREAM)
+                    await self.push_frame(LLMMessagesUpdateFrame([PROMPT_MAP[self.selected_prompt]]), FrameDirection.DOWNSTREAM)
 
     async def _launch_clone_job(self, audio_data: bytes):
         """Launches a clone job with the given audio data"""

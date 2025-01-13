@@ -50,7 +50,7 @@ else:
     logging.basicConfig(level=logging.INFO)
 
 
-async def main(room_url, token=None, xtts=False, elevenlabs=False, selectedPrompt=None):
+async def main(room_url, token=None, xtts=False, elevenlabs=False, selected_prompt=None):
     async with aiohttp.ClientSession() as session:
         # -------------- Transport --------------- #
 
@@ -94,7 +94,7 @@ async def main(room_url, token=None, xtts=False, elevenlabs=False, selectedPromp
             )
         else:
             logging.info("Using Cartesia")
-            tts_service = CartesiaTerrify(selectedPrompt=selectedPrompt)
+            tts_service = CartesiaTerrify(selected_prompt=selected_prompt)
 
         # --------------- Setup ----------------- #
 
@@ -171,7 +171,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="TerifAI Bot")
     parser.add_argument("--room_url", type=str, help="Room URL")
     parser.add_argument("--token", type=str, help="Token")
-    parser.add_argument("--prompt",  type=str, help = "Specific Prompt")
+    parser.add_argument("--prompt", type=str, default="default", help="Specific Prompt")
     parser.add_argument("--default", action="store_true", help="Default configurations")
     parser.add_argument("--xtts", action="store_true", help="Use XTTS")
     parser.add_argument("--elevenlabs", action="store_true", help="Use ElevenLabs")
