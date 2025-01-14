@@ -40,5 +40,5 @@ packages = ["backend"]
 build_docker = "./scripts/build_docker.sh"
 image = "./scripts/run_docker.sh"
 fly_deploy = "./scripts/fly_deploy.sh"
-bot = "python -m backend.bot --default"
+bot = "python -m backend.bot --default --prompt=default"
 server = "python -m backend.server --reload"

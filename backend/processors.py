@@ -3,6 +3,7 @@ import os
 import time
 import wave
 from dataclasses import dataclass
+from typing import List, Dict
 
 import aiohttp
 import requests
@@ -17,6 +18,7 @@ from pipecat.frames.frames import (
     EndFrame,
     Frame,
     LLMMessagesAppendFrame,
+    LLMMessagesUpdateFrame,
     TranscriptionFrame,
 )
 from pipecat.processors.frame_processor import FrameDirection, FrameProcessor
@@ -25,7 +27,14 @@ from pipecat.services.deepgram import DeepgramSTTService
 from pipecat.services.elevenlabs import ElevenLabsTTSService
 from pipecat.services.xtts import XTTSService
 
-from backend.prompts import LLM_VOICE_CHANGE_PROMPT
+from backend.prompts import (
+    LLM_VOICE_CHANGE_PROMPT_DEFAULT,
+    LLM_VOICE_CHANGE_PROMPT_IT_SUPPORT, 
+    LLM_VOICE_CHANGE_PROMPT_CORPORATE,
+    LLM_VOICE_CHANGE_PROMPT_FINANCE_FRAUD,
+    LLM_VOICE_CHANGE_PROMPT_ENGINEERING_BREACH,
+    LLM_VOICE_CHANGE_PROMPT_SECURITY_ALERT
+)
 
 load_dotenv()
 
@@ -35,6 +44,17 @@ DEFAULT_CARTESIA_VOICE_ID = "e00d0e4c-a5c8-443f-a8a3-473eb9a62355"
 CARTESIA_API_KEY = os.environ.get("CARTESIA_API_KEY")
 DEEPGRAM_API_KEY = os.environ.get("DEEPGRAM_API_KEY")
 DEFAULT_VOICE_ID = os.environ.get("ELEVENLABS_VOICE_ID")
+
+# voice change prompt map
+PROMPT_MAP = {
+    "default": LLM_VOICE_CHANGE_PROMPT_DEFAULT,
+    "it_support": LLM_VOICE_CHANGE_PROMPT_IT_SUPPORT,
+    "corporate": LLM_VOICE_CHANGE_PROMPT_CORPORATE,
+    "finance_fraud": LLM_VOICE_CHANGE_PROMPT_FINANCE_FRAUD,
+    "engineering_breach": LLM_VOICE_CHANGE_PROMPT_ENGINEERING_BREACH,
+    "security_alert": LLM_VOICE_CHANGE_PROMPT_SECURITY_ALERT,
+
+}
 
 # settings
 MIN_SECS_TO_LAUNCH = int(os.environ.get("MIN_SECS_TO_LAUNCH", 30))
@@ -355,11 +375,12 @@ class CartesiaTerrify(CartesiaTTSService):
         self,
         api_key: str = CARTESIA_API_KEY,
         voice_id: str = DEFAULT_CARTESIA_VOICE_ID,
+        selected_prompt=None,
         *args,
         **kwargs,
     ):
         super().__init__(api_key=api_key, voice_id=voice_id, *args, **kwargs)
-
+        
         # voice data collection attributes
         self._num_channels = 1
         self._sample_rate = 16000
@@ -375,6 +396,9 @@ class CartesiaTerrify(CartesiaTTSService):
         self._job_completed = False
         self._last_poll_time = time.time()
         self._poll_interval = DEFAULT_POLL_INTERVAL_SECS
+
+        # custom prompt
+        self.selected_prompt = selected_prompt
 
         logger.info("CartesiaTerrify initialized")
 
@@ -429,16 +453,10 @@ class CartesiaTerrify(CartesiaTTSService):
                 self._content.seek(0)
                 await self._launch_clone_job(self._content.read())
                 (self._content, self._wave) = self._new_wave()
-            elif (
-                self._job_id
-                and (time.time() - self._last_poll_time) >= self._poll_interval
-            ):
+            elif self._job_id and (time.time() - self._last_poll_time) >= self._poll_interval:
                 result = self._poll_job()
                 if result:
-                    await self.push_frame(
-                        LLMMessagesAppendFrame([LLM_VOICE_CHANGE_PROMPT]),
-                        FrameDirection.DOWNSTREAM,
-                    )
+                    await self.push_frame(LLMMessagesUpdateFrame([PROMPT_MAP[self.selected_prompt]]), FrameDirection.DOWNSTREAM)
 
     async def _launch_clone_job(self, audio_data: bytes):
         """Launches a clone job with the given audio data"""

@@ -4,7 +4,7 @@ import { ArrowRight, Ear, Loader2 } from "lucide-react";
 
 import MaintenancePage from "./components/MaintenancePage";
 import Session from "./components/Session";
-import { Configure, RoomSetup } from "./components/Setup";
+import { Configure, PromptSelect, RoomSetup } from "./components/Setup";
 import { Alert } from "./components/ui/alert";
 import { Button } from "./components/ui/button";
 import {
@@ -64,6 +64,8 @@ export default function App() {
   const [state, setState] = useState<State>(
     showConfigOptions ? "idle" : "configuring"
   );
+
+  const [selectedPrompt, setSelectedPrompt] = useState("default");
   const [error, setError] = useState<string | null>(null);
   const [startAudioOff, setStartAudioOff] = useState<boolean>(false);
   const [roomUrl, setRoomUrl] = useState<string | null>(roomQs || null);
@@ -82,7 +84,7 @@ export default function App() {
     }
   }
 
-  async function start() {
+  async function start(selectedPrompt: string) {
     if (!daily || (!roomUrl && !autoRoomCreation)) return;
 
     let data;
@@ -106,7 +108,8 @@ export default function App() {
         data = await fetch_start_agent(
           config.room_url,
           config.token,
-          serverUrl
+          serverUrl,
+          selectedPrompt
         );
 
         if (data.error) {
@@ -186,12 +189,16 @@ export default function App() {
             startAudioOff={startAudioOff}
             handleStartAudioOff={() => setStartAudioOff(!startAudioOff)}
           />
+          <PromptSelect
+            selectedSetting={selectedPrompt}
+            onSettingChange={setSelectedPrompt}
+          />
         </CardContent>
         <CardFooter className="flex flex-col gap-4">
           <Button
             key="start"
             fullWidthMobile
-            onClick={() => start()}
+            onClick={() => start(selectedPrompt)}
             disabled={state !== "configuring"}
           >
             {state !== "configuring" && <Loader2 className="animate-spin" />}
