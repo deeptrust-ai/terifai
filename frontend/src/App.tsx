@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDaily } from "@daily-co/daily-react";
-import { ArrowRight, Ear, Loader2 } from "lucide-react";
+import { ArrowRight, Ear} from "lucide-react";
 
 import MaintenancePage from "./components/MaintenancePage";
 import Session from "./components/Session";
@@ -21,7 +21,8 @@ const isMaintenanceMode = import.meta.env.VITE_MAINTENANCE_MODE === "true";
 
 type State =
   | "idle"
-  | "configuring"
+  | "configuring_step1"
+  | "configuring_step2"
   | "requesting_agent"
   | "connecting"
   | "connected"
@@ -29,12 +30,6 @@ type State =
   | "finished"
   | "error";
 
-const status_text = {
-  configuring: "Let's go!",
-  requesting_agent: "Requesting agent...",
-  requesting_token: "Requesting token...",
-  connecting: "Connecting to room...",
-};
 
 // Server URL (ensure trailing slash)
 let serverUrl = import.meta.env.VITE_SERVER_URL;
@@ -62,7 +57,7 @@ export default function App() {
   const daily = useDaily();
 
   const [state, setState] = useState<State>(
-    showConfigOptions ? "idle" : "configuring"
+    showConfigOptions ? "idle" : "configuring_step1"
   );
 
   const [selectedPrompt, setSelectedPrompt] = useState("default");
@@ -78,7 +73,7 @@ export default function App() {
     if ((autoRoomCreation && serverUrl) || checkRoomUrl(roomUrl)) {
       console.log("here");
       setRoomError(false);
-      setState("configuring");
+      setState("configuring_step1");
     } else {
       setRoomError(true);
     }
@@ -146,7 +141,7 @@ export default function App() {
   async function leave() {
     await daily?.leave();
     await daily?.destroy();
-    setState(showConfigOptions ? "idle" : "configuring");
+    setState(showConfigOptions ? "idle" : "configuring" as State);
   }
 
   if (isMaintenanceMode) {
@@ -171,7 +166,7 @@ export default function App() {
     );
   }
 
-  if (state !== "idle") {
+  if (state === "configuring_step1") {
     return (
       <Card shadow className="animate-appear max-w-lg">
         <CardHeader>
@@ -189,26 +184,43 @@ export default function App() {
             startAudioOff={startAudioOff}
             handleStartAudioOff={() => setStartAudioOff(!startAudioOff)}
           />
+        </CardContent>
+        <CardFooter>
+          <Button
+            fullWidthMobile
+            onClick={() => setState("configuring_step2")}
+          >
+            Next
+          </Button>
+        </CardFooter>
+      </Card>
+    );
+  }
+
+  if (state === "configuring_step2") {
+    return (
+      <Card shadow className="animate-appear max-w-lg">
+        <CardHeader>
+          <CardTitle>Customize Bot Behavior</CardTitle>
+          <CardDescription>
+            Choose how you want the bot to interact
+          </CardDescription>
+        </CardHeader>
+        <CardContent stack>
           <PromptSelect
             selectedSetting={selectedPrompt}
             onSettingChange={setSelectedPrompt}
           />
         </CardContent>
-        <CardFooter className="flex flex-col gap-4">
-          <Button
-            key="start"
-            fullWidthMobile
-            onClick={() => start(selectedPrompt)}
-            disabled={state !== "configuring"}
-          >
-            {state !== "configuring" && <Loader2 className="animate-spin" />}
-            {status_text[state as keyof typeof status_text]}
+        <CardFooter className="flex justify-between">
+          <Button onClick={() => setState("configuring_step1")}>
+            Back
           </Button>
-          {state === "requesting_agent" && (
-            <p className="text-sm text-muted-foreground animate-pulse">
-              Depending on traffic, this may take 1 to 2 minutes...
-            </p>
-          )}
+          <Button
+            onClick={() => start(selectedPrompt)}
+          >
+            Let's Go
+          </Button>
         </CardFooter>
       </Card>
     );
