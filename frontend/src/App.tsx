@@ -79,7 +79,7 @@ export default function App() {
     }
   }
 
-  async function start(selectedPrompt: string) {
+  async function start(selectedPrompt: string, redirect: boolean) {
     if (!daily || (!roomUrl && !autoRoomCreation)) return;
 
     let data;
@@ -112,10 +112,18 @@ export default function App() {
           setState("error");
           return;
         }
+
+        // Either redirect or show Session based on redirect parameter
+        if (redirect) {
+          window.location.href = config.room_url;
+        } else {
+          setState("connected");
+        }
       } catch (e) {
         setError(`Unable to connect to the bot server at '${serverUrl}'`);
         setState("error");
         return;
+
       }
     }
 
@@ -220,12 +228,18 @@ export default function App() {
             onSettingChange={setSelectedPrompt}
           />
         </CardContent>
-        <CardFooter>
+        <CardFooter className="flex gap-2">
           <Button
             fullWidthMobile
-            onClick={() => start(selectedPrompt)}
+            onClick={() => start(selectedPrompt, false)}
           >
-            Let's Go
+            Let's Chat
+          </Button>
+          <Button
+            fullWidthMobile
+            onClick={() => start(selectedPrompt, true)}
+          >
+            Join Video Call
           </Button>
         </CardFooter>
       </Card>
