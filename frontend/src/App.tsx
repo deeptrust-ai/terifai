@@ -200,7 +200,15 @@ export default function App() {
   if (state === "configuring_step2") {
     return (
       <Card shadow className="animate-appear max-w-lg">
-        <CardHeader>
+        <CardHeader className="relative">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="absolute left-4 top-4 text-muted-foreground hover:text-foreground hover:bg-gray-50"
+            onClick={() => setState("configuring_step1")}
+          >
+            ← Back
+          </Button>
           <CardTitle>Customize Bot Behavior</CardTitle>
           <CardDescription>
             Choose how you want the bot to interact
@@ -212,11 +220,9 @@ export default function App() {
             onSettingChange={setSelectedPrompt}
           />
         </CardContent>
-        <CardFooter className="flex justify-between">
-          <Button onClick={() => setState("configuring_step1")}>
-            Back
-          </Button>
+        <CardFooter>
           <Button
+            fullWidthMobile
             onClick={() => start(selectedPrompt)}
           >
             Let's Go
